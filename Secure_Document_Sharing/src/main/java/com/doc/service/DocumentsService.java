@@ -1,5 +1,6 @@
 package com.doc.service;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -80,6 +81,7 @@ public class DocumentsService implements IDocumentsService
         
         // Debug: check where files are stored
         System.out.println("Uploading file to: " + uploadPath);
+        
 		
 		 String fileName = docFile.getOriginalFilename();
          String storedName = UUID.randomUUID() + "_" + fileName;
@@ -92,7 +94,8 @@ public class DocumentsService implements IDocumentsService
          Files.copy(docFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 		}
 		catch (Exception e) {
-			
+			 e.printStackTrace();
+			    throw new RuntimeException("File upload failed", e);
 		}
 		
      
@@ -165,13 +168,28 @@ public class DocumentsService implements IDocumentsService
 								String recieverMail, String accessType, 
 								String expiry, String grantedByUsername) {
 		
-		
 		// get the sender
+				User grantedBy = userRepo.findByemail(grantedByUsername)
+						.orElseThrow(()-> new IllegalAccessError(" Sender not found"));
 		
-		User grantedBy = userRepo.findByemail(grantedByUsername).orElseThrow(()-> new IllegalAccessError("No Sender are Found..."));
 		
-
+				
+		// validate the SecureDocs User
 		
+		if("SecureDocs".equalsIgnoreCase(shareType))
+		{
+			 User secureUser = userRepo.findByemail(recieverMail)
+		                .orElseThrow(() ->
+		                        new IllegalArgumentException("SecureDocs user not found."));
+			 
+			 // prevent self-sharing
+		        if (secureUser.getEmail().equalsIgnoreCase(grantedByUsername)) {
+		            throw new IllegalArgumentException("You cannot share document with yourself.");
+		        }
+		}
+		
+		
+	
 		
 		// get the Documents
 		
@@ -207,7 +225,7 @@ public class DocumentsService implements IDocumentsService
 			perm.setDocPass(UUID.randomUUID().toString().substring(0, 8));
 		}
 		
-		if("Link".equalsIgnoreCase(shareType) || "Email".equalsIgnoreCase("Email") )
+		if("Link".equalsIgnoreCase(shareType) || "Email".equalsIgnoreCase(shareType) || "SecureDocs".equalsIgnoreCase(shareType))
 		{
 			String token = UUID.randomUUID().toString();
 			perm.setSecureToken(token);

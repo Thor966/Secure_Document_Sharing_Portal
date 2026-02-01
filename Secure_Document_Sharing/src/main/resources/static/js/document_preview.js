@@ -48,7 +48,7 @@ function confirmRecipientRevoke() {
 
 	            //  Setup download button
 				document.getElementById("downloadBtn").href =
-				    `/${contextPath}/download/${token}`;
+				    `/Secure_Document_Sharing/secure-download/${token}`;
 
 
 	            //  File preview logic

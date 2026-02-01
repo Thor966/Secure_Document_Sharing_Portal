@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ import com.doc.service.IDocumentsService;
 import com.doc.service.IuserService;
 import com.doc.util.ConfirmationEmail;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 public class DocumentController 
@@ -50,6 +52,10 @@ public class DocumentController
 	
 	@Autowired
 	private ConfirmationEmail emailConfirmation;
+	
+	
+	 @Value("${upload.path}")
+	  private String uploadDir;
 	
 	
 	public UserDTO getLoggedInUser()
@@ -107,8 +113,11 @@ public class DocumentController
 		
 		
 		// Build physical file path
-	    Path file = Paths.get("C:/Users/Aniket/Maid_For_you_Portal2/Secure_Document_Sharing" + filePath);
+		 String storedName = Paths.get(filePath).getFileName().toString();
 
+		 Path file = Paths.get(uploadDir).resolve(storedName);
+	    
+	    
 	    Resource resource = new UrlResource(file.toUri());
 
 	    if (!resource.exists() || !resource.isReadable()) {
@@ -130,8 +139,12 @@ public class DocumentController
 												 @RequestParam("shareType") String shareType,
 												 @RequestParam("receiverMail") String receiverMail,
 												 @RequestParam("accessType") String accessType,
-												 @RequestParam("expiry") String expiry) throws MessagingException
+												 @RequestParam("expiry") String expiry, HttpServletRequest req) throws MessagingException
 	{
+		
+		try
+		{
+		
 		// get logged in user
 		UserDTO user = getLoggedInUser();
 		
@@ -139,25 +152,58 @@ public class DocumentController
 		DocumentPermissions perm = docService.shareDocuments(documentId, shareType, receiverMail, accessType, expiry, user.getEmail());
 		
 		// Email and SecureDocs Confirmation
-		if(shareType.equals("Email") || shareType.equals("SecureDocs"))
+		if("Email".equalsIgnoreCase(shareType)|| "SecureDocs".equalsIgnoreCase(shareType))
 		{
 			emailConfirmation.sendConfirmationEmail(user,perm);
 		}
 		
+		
+		
 		// Generate Secure Link(Share via secure link)
-		if(shareType.equals("Link"))
+		if("Link".equalsIgnoreCase(shareType))
 		{
 			// Generate the Secure Link
-			String link = "http://localhost:9579/Secure_Document_Sharing/access-document.html?token=" + perm.getSecureToken();
-			// return
-			return ResponseEntity.ok(link);
+			
+			String baseUrl = req.getScheme() + "://" +
+                    req.getServerName() + ":" +
+                    req.getServerPort() +
+                    req.getContextPath();
+			
+			String link = baseUrl + "/access-document.html?token=" + perm.getSecureToken();
+			
+			 Map<String, Object> response = new HashMap<>();
+			    response.put("link", link);
+			    response.put("accessType", accessType);
+
+			    if ("OTP".equals(accessType)) {
+			        response.put("otp", perm.getDocOtp());
+			    }
+
+			    if ("PASSWORD".equals(accessType)) {
+			        response.put("password", perm.getDocPass()); 
+			    }
+
+			    // return response
+			    return ResponseEntity.ok(response);
 			
 		}
 		
+		
+		
 		String msg = "Document Share Successfully...";
 		
-		
 		return new ResponseEntity<String>(msg,HttpStatus.OK);
+		
+		
+		}
+		catch(IllegalArgumentException iae)
+		{
+			return ResponseEntity
+	                .badRequest()
+	                .body(Map.of("error", iae.getMessage()));
+		}
+		
+		
 		
 	}
 	
@@ -336,8 +382,10 @@ public class DocumentController
 	
 	
 	// download the doc by token
-	@GetMapping("/download/{token}")
+	@GetMapping("/secure-download/{token}")
 	public ResponseEntity<Resource> downloadDocument(@PathVariable String token) throws Exception {
+
+		System.out.println("SECURE DOWNLOAD HIT");
 
 
 	    // Get permission by token
@@ -362,10 +410,10 @@ public class DocumentController
 	    }
 
 
-	    // Build physical file path
-	    String filePath = dp.getDocumentId().getFilePath();
+	    String storedName = dp.getDocumentId().getStoredName();
 
-	    Path file = Paths.get("C:/Users/Aniket/Maid_For_you_Portal2/Secure_Document_Sharing" + filePath);
+	    Path file = Paths.get(uploadDir).resolve(storedName);
+
 	    Resource resource = new UrlResource(file.toUri());
 
 	    if (!resource.exists() || !resource.isReadable()) {

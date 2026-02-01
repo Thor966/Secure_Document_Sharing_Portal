@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import com.doc.repository.DocumentPermissionsRepository;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class ConfirmationEmail
@@ -27,8 +30,12 @@ public class ConfirmationEmail
 	@Autowired
 	private DocumentPermissionsRepository docPermission;
 	
+	@Autowired
+	private HttpServletRequest req;
 	
 	
+	 @Value("${upload.path}")
+	  private String uploadDir;
 	
 	// send Share Confirmation Email to the User
 	public void sendConfirmationEmail(UserDTO user , DocumentPermissions permission) throws MessagingException
@@ -68,7 +75,15 @@ public class ConfirmationEmail
 	}
 
 	// generate the SecureLink
-	String secureLink = "http://localhost:9579/Secure_Document_Sharing/access-document.html?token=" + permission.getSecureToken();
+	
+	String baseUrl = req.getScheme() + "://" +
+            req.getServerName() + ":" +
+            req.getServerPort() +
+            req.getContextPath();
+	
+	String secureLink = baseUrl + "/access-document.html?token=" + permission.getSecureToken();
+	
+	
 	
 	
 	// If Email sharing

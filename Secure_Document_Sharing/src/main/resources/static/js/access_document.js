@@ -13,50 +13,6 @@ function togglePassword(icon) {
         }
     }
 	
-	
-	
-	
-	
-	
-	// Get token from URL
-	    /*const params = new URLSearchParams(window.location.search);
-	    const token = params.get("token");
-
-	    if (!token) {
-	        alert("Invalid access link");
-	        window.location.href = "/error.html";
-	    }
-
-	    // Call backend REST API
-	    fetch("/access/" + token)
-	        .then(res => {
-	            if (!res.ok) throw new Error("Access denied");
-	            return res.json();
-	        })
-	        .then(data => {
-
-	            // Set document name
-	            document.getElementById("documentName").innerText = data.documentName;
-
-	            // Handle access type
-	            if (data.accessType === "NO ACCESS") {
-	                // Direct download
-	                window.location.href = data.next;
-	            }
-
-	            if (data.accessType === "OTP") {
-	                document.getElementById("otpSection").style.display = "block";
-	                document.getElementById("passwordSection").style.display = "none";
-	            }
-
-	            if (data.accessType === "PASSWORD") {
-	                document.getElementById("otpSection").style.display = "none";
-	                document.getElementById("passwordSection").style.display = "block";
-	            }
-	        })
-	        .catch(err => {
-	            alert("This link is invalid or expired");
-	        });*/
 			
 			
 			const CONTEXT_PATH = window.location.pathname.split('/')[1]

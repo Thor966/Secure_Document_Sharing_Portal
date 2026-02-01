@@ -119,13 +119,13 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/uploadDocuments}" method="post"  enctype="multipart/form-data" onsubmit="handleUpload(event)">
+                    <form th:action="@{/uploadDocuments}" method="post"  enctype="multipart/form-data" onsubmit="handleUpload(event)"> 
                         
                         <div class="mb-3">
                            
                             <label for="file" class="form-label">Choose File:</label>
                              <input type="file" class="form-control" id="file"  name="filePath"
-                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.csv,.txt" required> <!-- th:field="*{filePath}" -->
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.csv,.txt" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
@@ -372,17 +372,30 @@
     <div class="modal-content p-3">
     
      		<div class="modal-header">
+     			<i class="bi bi-link-45deg me-1 mb-2 fw-bold fs-4 text-primary "></i>
                 <h5 class="mb-3">Secure Link Generated</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
      
 
+			<div class="modal-body">
       		<input type="text" id="generatedLink" class="form-control mb-3" readonly>
+      		
+      		<div id="securityInfo" class="mt-2 mb-2 text-center fw-semibold text-danger"></div>
+      	
 
      		 <button id="copyBtn" class="btn btn-copy w-100" onclick="copyLink()">
    			 <i class="fa-solid fa-copy me-2"></i>
    			 Copy Link
 			</button>
+			
+			</div>
+			
+			<div class="modal-footer">
+               <p class="fs-6 text-secondary"><strong class="text-danger fw-bold">Note:- 
+               </strong>&nbsp; Please Share These Password Or Otp With These Generated Document Link 
+               (If Document is Not Locked Then Ignore These Message.)</p>
+            </div>
 
     </div>
   </div>

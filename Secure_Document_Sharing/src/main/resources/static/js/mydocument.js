@@ -64,6 +64,8 @@ fetch(CONTEXT_PATH + 'fetchDocumentDetails')
 	
 	function viewDocument(filePath, fileName) {
 
+		document.getElementById("docName").innerText = fileName;
+		
 	    const img = document.getElementById("docImage");
 	    const pdf = document.getElementById("docPdf");
 	    const text = document.getElementById("docText");
@@ -81,9 +83,6 @@ fetch(CONTEXT_PATH + 'fetchDocumentDetails')
 
 	    // Extract extension
 	    const ext = fileName.split('.').pop().toLowerCase();
-
-	    console.log("Preview file:", fullUrl);
-	    console.log("Extension:", ext);
 		
 		// Download link
 		  downloadBtn.onclick = function () {
@@ -122,6 +121,10 @@ fetch(CONTEXT_PATH + 'fetchDocumentDetails')
 		
 	}
 
+	
+	
+	
+	
 
 	/*share doc*/
 	
@@ -140,6 +143,8 @@ document.addEventListener("click", function (e) {
          document.getElementById("originalName").innerText = originName;
     }
 });
+
+
 
 
 // Generate Secure link (Hide Receiver mail)
@@ -202,48 +207,111 @@ document.addEventListener("DOMContentLoaded", function () {
 
        const generateLink = document.getElementById("generate_link");
 
-       fetch(form.action, {
-           method: 'POST',
-           body: formData
-       })
-       .then(response => response.text())
-       .then(data => {
+	   fetch(form.action, {
+	       method: 'POST',
+	       body: formData
+	   })
+	   .then(async response => {
 
-           if (generateLink.checked) {
+	       const contentType = response.headers.get("content-type");
 
-               // Show link modal instead of toast
-               document.getElementById("generatedLink").value = data;
+		   let data;
 
-               const linkModal = new bootstrap.Modal(
-                   document.getElementById("linkModal")
-               );
-               linkModal.show();
+		        if (contentType && contentType.includes("application/json")) {
+		            data = await response.json();
+		        } else {
+		            data = await response.text();
+		        }
 
-               // Reset form + close share modal
-               bootstrap.Modal.getInstance(
-                   document.getElementById('documentModal')
-               ).hide();
+		        // If response is not OK → show error
+		        if (!response.ok) {
+		            if (typeof data === "object" && data.error) {
+		                throw new Error(data.error);
+		            } else {
+		                throw new Error(data || "Something went wrong");
+		            }
+		        }
 
-               form.reset();
+		        return data;
 
-           } else {
+		   
+	   })
+	   .then(data => {
 
-               //  success toast
-               showSuccessToast("Document Shared successfully!");
+	       if (generateLink.checked && typeof data === "object") {
 
-               bootstrap.Modal.getInstance(
-                   document.getElementById('documentModal')
-               ).hide();
+	           document.getElementById("generatedLink").value = data.link;
 
-               form.reset();
-           }
+	           const securityInfo = document.getElementById("securityInfo");
+	           securityInfo.innerHTML = "";
 
-       })
-       .catch(() => {
-           showErrorToast("Server error occurred.");
-       });
+	           if (data.accessType === "OTP") {
+	               securityInfo.innerHTML =
+	                   `OTP: <strong>${data.otp}</strong>`;
+	           }
+
+	           if (data.accessType === "PASSWORD") {
+	               securityInfo.innerHTML =
+	                   ` Password: <strong>${data.password}</strong>`;
+	           }
+
+	           const linkModal = new bootstrap.Modal(
+	               document.getElementById("linkModal")
+	           );
+	           linkModal.show();
+
+			   bootstrap.Modal.getInstance(
+			              document.getElementById('shareModal')
+			          )?.hide();
+
+	           form.reset();
+
+	       } else {
+
+		
+			showSuccessToast("Document Shared successfully!");
+
+			        bootstrap.Modal.getInstance(
+			            document.getElementById('shareModal')
+			        )?.hide();
+
+	           form.reset();
+	       }
+
+	   })
+	   .catch(error => {
+	          console.error("Share Error:", error);
+	          showErrorToast(error.message);
+	      });
    }
    
+   
+   
+   
+   // Show Toast messages
+   function showSuccessToast(msg) {
+       const toastEl = document.getElementById("successToast");
+       const msgEl = document.getElementById("successMsg");
+
+       msgEl.innerText = msg;
+
+       const toast = new bootstrap.Toast(toastEl);
+       toast.show();
+   }
+
+   function showErrorToast(error) {
+       const toastEl = document.getElementById("errorToast");
+       const msgEl = document.getElementById("errorMsg");
+
+       msgEl.innerText = error;
+
+       const toast = new bootstrap.Toast(toastEl);
+       toast.show();
+   }
+
+   
+   
+      
 
    // Copy the link
    function copyLink() {
