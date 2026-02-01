@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Documents | SecureDocs</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link th:href="@{/css/mydocument.css}" rel="stylesheet">
+</head>
+
+<body>
+
+
+
+<div class="toast-container position-fixed p-3 mb-5"
+			style="top: 20px; right: 20px; z-index: 4000;">
+
+			<!-- Success Toast -->
+			<div class="toast align-items-center text-white bg-success border-0"
+     			id="successToast">
+    			<div class="toast-body" id="successMsg"></div>
+			</div>
+
+			<!-- Error Toast -->
+			<div class="toast align-items-center text-white bg-danger border-0"
+    			 id="errorToast">
+   				 <div class="toast-body" id="errorMsg"></div>
+			</div>
+
+		</div>
+
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/dashboard}">
+            <i class="fa-solid fa-shield-halved me-2"></i>SecureDocs
+        </a>
+        <div class="ms-auto">
+            <a data-bs-toggle="modal" data-bs-target="#documentModal"class="btn btn-outline-light btn-sm me-2">
+                <i class="fa-solid fa-upload me-1"></i> Upload
+            </a>
+            <a th:href="@{/logout}" class="btn btn-light btn-sm">Logout</a>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION ICON -->
+<div class="dropdown me-3">
+    <a class="btn btn-outline-light btn-sm position-relative"
+       data-bs-toggle="dropdown">
+        <i class="fa-solid fa-bell"></i>
+        <span class="position-absolute top-0 start-100 translate-middle
+                     badge rounded-pill bg-danger">
+            3
+        </span>
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end p-2" style="width:300px;">
+        <li class="dropdown-header fw-semibold">Notifications</li>
+
+        <li>
+            <a class="dropdown-item small">
+                <i class="fa-solid fa-share-nodes me-2 text-primary"></i>
+                Document shared successfully
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item small">
+                <i class="fa-solid fa-eye me-2 text-success"></i>
+                Resume.pdf was accessed
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item small">
+                <i class="fa-solid fa-ban me-2 text-danger"></i>
+                Access revoked for auditor@firm.com
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="text-center">
+            <a th:href="@{/notifications}"
+               class="dropdown-item fw-semibold text-primary">
+                View all notifications
+            </a>
+        </li>
+    </ul>
+</div>
+
+</nav>
+
+
+<!-- Upload Documents Modal -->
+    <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="uploadDocumentsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-block">
+                        <i class="fa-solid fa-upload stat-icon"></i>
+                        <h5 class="modal-title fw-semibold text-primary mb-0 mt-2" id="uploadDocumentsModalLabel">
+                            Upload Document</h5>
+                    </div>
+
+                    <button type="button" class="btn-close btn-dark top-0" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/uploadDocuments}" method="post"  enctype="multipart/form-data" onsubmit="handleUpload(event)">
+                        
+                        <div class="mb-3">
+                           
+                            <label for="file" class="form-label">Choose File:</label>
+                             <input type="file" class="form-control" id="file"  name="filePath"
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.csv,.txt" required> <!-- th:field="*{filePath}" -->
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#editModal">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- CONTENT -->
+
+ <section class="container">
+
+        <!-- HEADER -->
+        <div class="mb-4">
+            <h2 class="page-title"><a href="/Secure_Document_Sharing/dashboard" class="bi bi-arrow-left text-decoration-none fs-3 fw-bolder me-2 text-dark"></a>
+            	My Documents</h2>
+            <p class="text-muted">
+                Manage, share, and monitor your uploaded documents
+            </p>
+        </div>
+        
+        
+        <div class="mb-4 text-end">
+        <a href="/Secure_Document_Sharing/managedocuments" class="btn btn-outline-primary px-4">
+			 Manage
+		</a>
+        </div>
+
+        <!-- DOCUMENT TABLE -->
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Document Name</th>
+                                        <th>Upload Time</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="docTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+    </section>
+    
+    
+    
+    
+    <!-- Manage DOCUMENT MODAL -->
+        <div class="modal fade" id="ManageDocModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4">
+                
+                 <div class="modal-header">
+                    <i class="bi bi-file text-primary fs-4 fw-bold"></i>
+                    <h5 class="modal-title fw-bold" id="documentModalLabel">Manage Document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+
+                    <!-- Manage DOCUMENT TABLE -->
+                    <div class="table-card w-100">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Document Name</th>
+                                        <th>Share Type</th>
+                                        <th>Granted To</th>
+                                        <th>Expiry</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="manageDocTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+<!-- View Document Modal -->
+    <div class="modal fade" id="viewdocumentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="bi bi-file text-primary fs-4 fw-bold"></i>
+                    <h5 class="modal-title fw-bold" id="documentModalLabel">Document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="text-center">
+                        <h6 class="mb-3" id="docName">Document</h6>
+                        <img id="docImage" alt="Customer Model Image" class="img-fluid" />  
+                        
+                        <!-- PDF preview -->
+    					<iframe id="docPdf" class="w-100 d-none" style="height:500px;"></iframe>
+
+   					 <!-- Text preview -->
+   						 <pre id="docText" class="d-none text-start"></pre>
+
+    				<!-- Fallback message -->
+			   			 <p id="noPreview" class="text-muted d-none">
+			       			 Preview not available. Please download the file.
+   						 </p>
+   					
+                    </div>
+                    
+                   <div class="modal-footer">
+    				<button id="downloadBtn" class="btn btn-primary">
+      				  Download
+    				</button>
+					</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- Share Document modal -->
+
+<div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+	
+		<form th:action="@{/shareDocument}" method="post" onsubmit="handleUpload(event)">
+            <div class="modal-header">
+                <h5 class="modal-title fw-semibold">
+                    <i class="fa-solid fa-share-nodes me-2 text-primary"></i>
+                    Share Document
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+               <div class="modal-body">
+               
+               <input type="hidden" id="shareDocumentId" name="documentId">
+               
+
+                    <!-- DOCUMENT INFO -->
+                    <div class="mb-4">
+                        <p class="mb-1 fw-semibold">Document</p>
+                        <p class="text-muted mb-0" id="originalName">Resume.pdf</p>
+                    </div>
+
+                    <!-- SHARING METHOD -->
+                    <div class="mb-4">
+                        <p class="fw-semibold mb-2">Choose Sharing Method</p>
+
+                        <div class="form-check mb-2">
+                            <input  id="share_email" class="form-check-input" type="radio" name="shareType" value="Email" checked>
+                            <label for="share_email"  class="form-check-label">
+                                Share via Email (Recommended)
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-2">
+                            <input id="generate_link" class="form-check-input" type="radio" name="shareType" value="Link">
+                            <label for="generate_link" class="form-check-label">
+                                Generate Secure Link
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input id="secure_doc" class="form-check-input" type="radio" name="shareType" value="SecureDocs">
+                            <label for="secure_doc" class="form-check-label">
+                                Share with SecureDocs User
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- EMAIL SHARE -->
+                    <div class="mb-4" id="emailField">
+                        <label for="receiver_mail" class="form-label">Receiver Email</label>
+                        <input type="email" id="receiver_mail" name="receiverMail" class="form-control" placeholder="example@domain.com">
+                    </div>
+
+                    <!-- ACCESS TYPE -->
+                    <div class="mb-4">
+                        <label class="form-label">Access Protection</label>
+                        <select class="form-select" name="accessType">
+                            <option value="OTP">OTP Based Access</option>
+                            <option value="PASSWORD">Password Based Access</option>
+                            <option value="NO ACCESS">No Access (Public)</option>
+                        </select>
+                    </div>
+
+                    <!-- EXPIRY -->
+                    <div class="mb-3">
+                        <label class="form-label">Access Expiry</label>
+                        <select class="form-select" name="expiry">
+                            <option value="NO EXPIRY">No Expiry (Unlimited Validity)</option>
+                            <option value="1W">1 Week</option>
+                            <option value="24H">24 Hours</option>
+                            <option value="3D">3 Days</option>
+                            <option value="7D">7 Days</option>
+                        </select>
+                    </div>
+
+                    <p class="text-muted small mb-0">
+                        <i class="fa-solid fa-lock me-1"></i>
+                        Access will be revoked automatically after expiry
+                    </p>
+
+                </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button id="shareBtn2" class="btn btn-primary">
+                    Share Securely
+                </button>
+            </div>
+		</form>
+        </div>
+    </div>
+</div>
+
+
+ 	<!-- Generate Secure Link Copy Modal -->
+
+<div class="modal fade" id="linkModal" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+    
+     		<div class="modal-header">
+                <h5 class="mb-3">Secure Link Generated</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+     
+
+      		<input type="text" id="generatedLink" class="form-control mb-3" readonly>
+
+     		 <button id="copyBtn" class="btn btn-copy w-100" onclick="copyLink()">
+   			 <i class="fa-solid fa-copy me-2"></i>
+   			 Copy Link
+			</button>
+
+    </div>
+  </div>
+</div>
+ 	
+ 	
+ 	
+ 	
+ 	
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/mydocument.js}"></script>
+
+</body>
+</html>

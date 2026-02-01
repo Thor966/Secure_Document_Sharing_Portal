@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Management | SecureDocs Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <link th:href="@{/css/admincss/admin_document.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark fixed-top">
+    <div class="container-fluid">
+        <span class="navbar-brand fw-bold">
+            <i class="fa-solid fa-shield-halved me-2"></i>SecureDocs Admin
+        </span>
+        <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+    </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <a th:href="@{/admin/dashboard}">
+        <i class="fa-solid fa-chart-line me-2"></i> Dashboard
+    </a>
+    <a th:href="@{/admin/users}">
+        <i class="fa-solid fa-users me-2"></i> Users
+    </a>
+    <a class="active" th:href="@{/admin/documents}">
+        <i class="fa-solid fa-folder-open me-2"></i> Documents
+    </a>
+    <a th:href="@{/admin/security}">
+        <i class="fa-solid fa-shield-check me-2"></i> Security Logs
+    </a>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <h2 class="fw-bold mb-4">Document Management</h2>
+
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Owner</th>
+                        <th>Status</th>
+                        <th>Active Shares</th>
+                        <th>Uploaded On</th>
+                        <th class="text-end">Admin Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <!-- ACTIVE DOCUMENT -->
+                    <tr>
+                        <td>AuditReport.pdf</td>
+                        <td>aniket@gmail.com</td>
+                        <td>
+                            <span class="badge badge-active">Active</span>
+                        </td>
+                        <td>4</td>
+                        <td>2026-01-02</td>
+                        <td class="text-end">
+                            <form th:action="@{/admin/documents/revoke}" method="post"
+                                  onsubmit="return confirm('Force revoke this document?');">
+                                <input type="hidden" name="documentId" value="101">
+                                <button class="btn btn-sm btn-outline-danger">
+                                    Force Revoke
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <!-- EXPIRED DOCUMENT -->
+                    <tr>
+                        <td>OfferLetter.pdf</td>
+                        <td>hr@company.com</td>
+                        <td>
+                            <span class="badge badge-expired">Expired</span>
+                        </td>
+                        <td>0</td>
+                        <td>2025-12-21</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                No Action
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- REVOKED DOCUMENT -->
+                    <tr>
+                        <td>InternalPolicy.docx</td>
+                        <td>admin@securedocs.com</td>
+                        <td>
+                            <span class="badge badge-revoked">Revoked</span>
+                        </td>
+                        <td>0</td>
+                        <td>2026-01-01</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                Revoked
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared With Me | SecureDocs</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <link th:href="@{/css/share_with_me.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/dashboard}">
+            <i class="fa-solid fa-shield-halved me-2"></i>SecureDocs
+        </a>
+
+        <div class="ms-auto">
+            <a th:href="@{/logout}" class="btn btn-light btn-sm">Logout</a>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION ICON -->
+<div class="dropdown me-3">
+    <a class="btn btn-outline-light btn-sm position-relative"
+       data-bs-toggle="dropdown">
+        <i class="fa-solid fa-bell"></i>
+        <span class="position-absolute top-0 start-100 translate-middle
+                     badge rounded-pill bg-danger">
+            3
+        </span>
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end p-2" style="width:300px;">
+        <li class="dropdown-header fw-semibold">Notifications</li>
+
+        <li>
+            <a class="dropdown-item small">
+                <i class="fa-solid fa-share-nodes me-2 text-primary"></i>
+                Document shared successfully
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item small">
+                <i class="fa-solid fa-eye me-2 text-success"></i>
+                Resume.pdf was accessed
+            </a>
+        </li>
+
+        <li>
+            <a class="dropdown-item small">
+                <i class="fa-solid fa-ban me-2 text-danger"></i>
+                Access revoked for auditor@firm.com
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="text-center">
+            <a th:href="@{/notifications}"
+               class="dropdown-item fw-semibold text-primary">
+                View all notifications
+            </a>
+        </li>
+    </ul>
+</div>
+
+</nav>
+
+<!-- CONTENT -->
+<section class="container">
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h2 class="page-title">Shared With Me</h2>
+        <p class="text-muted">
+            Documents shared with you by other users
+        </p>
+    </div>
+
+    <!-- SHARED DOCUMENTS TABLE -->
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Shared By</th>
+                        <th>Access Type</th>
+                        <th>Expiry</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <!-- ACTIVE -->
+                    <tr>
+                        <td>SalarySlip.pdf</td>
+                        <td>hr@company.com</td>
+                        <td>OTP</td>
+                        <td>2 days</td>
+                        <td>
+                            <span class="badge badge-secure">Active</span>
+                        </td>
+                        <td class="text-end">
+                            <a th:href="@{/access/abc123}"
+                               class="btn btn-sm btn-outline-primary action-btn">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- EXPIRED -->
+                    <tr>
+                        <td>OfferLetter.pdf</td>
+                        <td>hr@company.com</td>
+                        <td>Password</td>
+                        <td>Expired</td>
+                        <td>
+                            <span class="badge bg-secondary">Expired</span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary action-btn" disabled>
+                                View
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- REVOKED -->
+                    <tr>
+                        <td>AuditReport.pdf</td>
+                        <td>auditor@firm.com</td>
+                        <td>OTP</td>
+                        <td>—</td>
+                        <td>
+                            <span class="badge bg-danger">Revoked</span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary action-btn" disabled>
+                                View
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+
+<script th:src="@{/js/share_with_me.js}"></script>
+
+</body>
+</html>

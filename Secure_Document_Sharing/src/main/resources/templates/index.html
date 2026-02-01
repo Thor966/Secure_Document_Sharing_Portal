@@ -1,0 +1,313 @@
+
+ <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- ===== META ===== -->
+    <meta charset="UTF-8">
+    <title>SecureDocs | Smart & Secure Document Sharing</title>
+
+    <meta name="description"
+          content="SecureDocs enables secure document sharing using OTP, access control, and time-based expiry. Built for privacy and trust.">
+    <meta name="keywords"
+          content="Secure Document Sharing, OTP File Access, File Security, Spring Boot Project">
+    <meta name="author" content="Aniket Gawande">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          rel="stylesheet">
+
+    <link th:href="@{/css/index.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+            <i class="fa-solid fa-shield-halved me-2"></i>SecureDocs
+        </a>
+
+        <div class="ms-auto">
+            <a th:href="@{/login}"
+               class="btn btn-outline-light btn-sm me-2">
+                Login
+            </a>
+
+            <a th:href="@{/register}"
+               class="btn btn-light btn-sm px-4">
+                Get Started
+            </a>
+        </div>
+      
+        </div>
+
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-lg-7">
+
+                <h1>
+                    Share documents <br>
+                    <span>securely & intelligently</span>
+                </h1>
+
+                <p class="mt-4">
+                    SecureDocs helps you protect sensitive documents using OTP verification,
+                    controlled access, and time-based expiry — built for trust.
+                </p>
+
+                <div class="mt-4">
+                    <a th:href="@{/register}"
+                       class="btn btn-light btn-lg me-3 px-5">
+                        Start Free
+                    </a>
+
+                    <a th:href="@{/login}"
+                       class="btn btn-outline-light btn-lg">
+                        Login
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="features">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Why SecureDocs?</h2>
+            <p class="text-muted">
+                Designed to protect data without compromising usability
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <h5>OTP Protected Access</h5>
+                    <p class="text-muted">
+                        Documents are secured with one-time passwords.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <h5>Granular Access Control</h5>
+                    <p class="text-muted">
+                        Only intended recipients can access files.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <h5>Time-Based Expiry</h5>
+                    <p class="text-muted">
+                        Access is revoked automatically after expiry.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="features pt-0">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+
+            <div class="col-lg-6">
+                <div class="feature-card text-start h-100">
+                    <h3 class="fw-bold mb-3">What is SecureDocs?</h3>
+                    <p class="text-muted">
+                        SecureDocs is a secure document sharing portal designed to ensure
+                        that sensitive files are shared only with authorised users.
+                    </p>
+                    <p class="text-muted mb-0">
+                        It combines OTP-based authentication, controlled permissions,
+                        and automatic expiry to minimise data leakage risks.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="feature-card text-start h-100">
+                    <h4 class="fw-semibold mb-3">Key Objectives</h4>
+                    <ul class="secure-list">
+                        <li>Prevent unauthorised access</li>
+                        <li>Secure authentication using OTP</li>
+                        <li>Track document lifecycle</li>
+                        <li>Enable time-bound sharing</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= TRUST & SECURITY ================= -->
+<section class="features pt-0">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Security you can rely on</h2>
+            <p class="text-muted">
+                Designed with privacy-first principles and industry best practices
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <h5>Secure Authentication</h5>
+                    <p class="text-muted">
+                        Multi-layer authentication using OTP and secure sessions.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <h5>Controlled Access</h5>
+                    <p class="text-muted">
+                        Documents are accessible only to authorised recipients.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <h5>Session Protection</h5>
+                    <p class="text-muted">
+                        Secure session handling prevents unauthorised reuse.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="feature-card">
+                    <h5>Time-Bound Sharing</h5>
+                    <p class="text-muted">
+                        Automatic expiry ensures documents don’t live forever.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= USE CASES ================= -->
+<section class="features">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Who should use SecureDocs?</h2>
+            <p class="text-muted">
+                Trusted by individuals, teams, and organisations
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h5>Enterprises</h5>
+                    <p class="text-muted">
+                        Share contracts, reports, and internal documents securely.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h5>Developers & Startups</h5>
+                    <p class="text-muted">
+                        Protect confidential files such as credentials and builds.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h5>Individuals</h5>
+                    <p class="text-muted">
+                        Safely share personal documents with full control.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta text-center">
+    <div class="container">
+        <h2 class="fw-bold">Start sharing documents the secure way</h2>
+        <p class="mt-2">Simple. Fast. Secure.</p>
+        <a th:href="@{/register}"
+           class="btn btn-dark btn-lg mt-3 px-5">
+            Create Account
+        </a>
+    </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="text-center">
+    <div class="container">
+        © 2026 SecureDocs • Developed by Aniket Gawande
+    </div>
+</footer>
+
+<script th:src="@{/js/index.js}"></script>
+
+</body>
+</html>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

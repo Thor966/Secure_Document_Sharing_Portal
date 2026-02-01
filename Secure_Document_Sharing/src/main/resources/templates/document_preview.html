@@ -1,0 +1,190 @@
+<!-- <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Preview | SecureDocs</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    Bootstrap
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    Icons
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+	<link th:href="@{/css/document_preview.css}" rel="stylesheet">
+   
+</head>
+
+<body>
+
+NAVBAR
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <span class="navbar-brand fw-bold">
+            <i class="fa-solid fa-shield-halved me-2"></i>SecureDocs
+        </span>
+    </div>
+</nav>
+
+<section class="container">
+
+    HEADER
+    <div class="preview-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h5 class="fw-semibold mb-1" th:text="${documentName}">
+                Project_Proposal.pdf
+            </h5>
+            <small class="text-muted">
+                Shared by <span th:text="${sharedBy}">owner@securedocs.com</span>
+            </small>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge badge-secure">
+                <i class="fa-solid fa-lock me-1"></i> Secure Access
+            </span>
+            <span class="badge badge-expiry">
+                Expires in <span th:text="${expiry}">2 days</span>
+            </span>
+        </div>
+    </div>
+
+    PREVIEW
+    <div class="preview-container">
+        PDF / DOC / IMAGE PREVIEW
+        <iframe class="preview-frame"
+                src="/documents/preview">
+        </iframe>
+    </div>
+
+    ACTIONS
+    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+        <p class="security-note mb-0">
+            <i class="fa-solid fa-eye me-1"></i>
+            Viewing is monitored and logged
+        </p>
+
+        <div class="d-flex gap-2">
+            <a 
+               href="/documents/download"
+               class="btn btn-primary action-btn">
+                <i class="fa-solid fa-download me-1"></i>
+                Download
+            </a>
+
+            <a href="/" class="btn btn-outline-secondary action-btn">
+                Close
+            </a>
+        </div>
+    </div>
+
+ 
+
+
+
+</section>
+
+<script th:src="@{/js/document_preview.js}"></script>
+
+
+</body>
+</html>
+ -->
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Preview | SecureDocs</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <!-- Local CSS -->
+    <link href="css/document_preview.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <span class="navbar-brand fw-bold">
+            <i class="fa-solid fa-shield-halved me-2"></i>SecureDocs
+        </span>
+    </div>
+</nav>
+
+<section class="container mt-5 pt-4">
+
+    <!-- HEADER -->
+    <div class="preview-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h5 class="fw-semibold mb-1" id="docName">Loading...</h5>
+            <small class="text-muted" id="sharedBy">Shared securely</small>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary">
+                <i class="fa-solid fa-lock me-1"></i> Secure Access
+            </span>
+            <span class="badge bg-warning text-dark" id="expiryInfo">
+                Checking expiry...
+            </span>
+        </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-container mt-3">
+    					
+    					<!-- Image preview -->
+         			<img id="docImage" alt="Customer Model Image" class="img-fluid" />  
+                        
+                        <!-- PDF preview -->
+    					<iframe id="docPdf" class="w-100 d-none"  style="height:500px;"></iframe>
+
+   					 <!-- Text preview -->
+   						 <pre id="docText" class="d-none text-start"></pre>
+
+    				<!-- Fallback message -->
+			   			 <p id="noPreview" class="text-muted d-none">
+			       			 Preview not available. Please download the file.
+   						 </p>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2 mb-lg-5">
+        <p class="security-note mb-0">
+            <i class="fa-solid fa-eye me-1"></i>
+            Viewing is monitored and logged
+        </p>
+
+        <div class="d-flex gap-2">
+            <a id="downloadBtn" class="btn btn-primary">
+                <i class="fa-solid fa-download me-1"></i> Download
+            </a>
+            <a href="/Secure_Document_Sharing/" class="btn btn-outline-secondary">Close</a>
+        </div>
+    </div>
+
+</section>
+
+<script src="js/document_preview.js"></script>
+</body>
+</html>
+ 

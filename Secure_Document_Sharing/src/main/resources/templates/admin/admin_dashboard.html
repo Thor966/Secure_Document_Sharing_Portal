@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | SecureDocs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <link th:href="@{/css/admincss/admin_dashboard.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark fixed-top">
+    <div class="container-fluid">
+        <span class="navbar-brand fw-bold">
+            <i class="fa-solid fa-shield-halved me-2"></i>SecureDocs Admin
+        </span>
+        <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+    </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <a class="active" th:href="@{/admin/dashboard}">
+        <i class="fa-solid fa-chart-line me-2"></i> Dashboard
+    </a>
+    <a th:href="@{/admin/users}">
+        <i class="fa-solid fa-users me-2"></i> Users
+    </a>
+    <a th:href="@{/admin/documents}">
+        <i class="fa-solid fa-folder-open me-2"></i> Documents
+    </a>
+    <a th:href="@{/admin/security}">
+        <i class="fa-solid fa-shield-check me-2"></i> Security Logs
+    </a>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <h2 class="fw-bold mb-4">Admin Dashboard</h2>
+
+    <!-- KPI SUMMARY -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <p class="text-muted mb-1">Total Users</p>
+                <div class="stat-value">1,240</div>
+                <small class="text-success">+12 today</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <p class="text-muted mb-1">Documents Uploaded</p>
+                <div class="stat-value">6,430</div>
+                <small class="text-success">+84 today</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <p class="text-muted mb-1">Active Shares</p>
+                <div class="stat-value">2,180</div>
+                <small class="text-muted">Across platform</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <p class="text-muted mb-1">Security Alerts</p>
+                <div class="stat-value text-danger">7</div>
+                <small class="text-danger">Needs attention</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER & DOCUMENT OVERVIEW -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="stat-card">
+                <h6 class="fw-semibold mb-3">User Activity Overview</h6>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">New registrations today: <strong>18</strong></li>
+                    <li class="list-group-item">Active users (24h): <strong>980</strong></li>
+                    <li class="list-group-item">Disabled users: <strong class="text-danger">14</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="stat-card">
+                <h6 class="fw-semibold mb-3">Document Activity Overview</h6>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Documents uploaded today: <strong>84</strong></li>
+                    <li class="list-group-item">Documents expired today: <strong>29</strong></li>
+                    <li class="list-group-item">Force revoked by admin: <strong class="text-warning">6</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECURITY ALERTS -->
+    <div class="stat-card mb-4">
+        <h6 class="fw-semibold mb-3">
+            <i class="fa-solid fa-triangle-exclamation me-2 text-danger"></i>
+            Security Alerts & Risk Events
+        </h6>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <i class="fa-solid fa-lock-open me-2 text-danger"></i>
+                Multiple failed OTP attempts detected (5 users)
+            </li>
+            <li class="list-group-item">
+                <i class="fa-solid fa-user-slash me-2 text-warning"></i>
+                3 users temporarily blocked due to suspicious activity
+            </li>
+            <li class="list-group-item">
+                <i class="fa-solid fa-download me-2 text-info"></i>
+                Download limit exceeded on 4 documents
+            </li>
+        </ul>
+    </div>
+
+    <!-- SYSTEM HEALTH -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <p class="text-muted mb-1">Storage Usage</p>
+                <div class="stat-value">68%</div>
+                <small class="text-muted">1.3 TB used</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card">
+                <p class="text-muted mb-1">Email / OTP Service</p>
+                <div class="stat-value text-success">Operational</div>
+                <small class="text-muted">No failures</small>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card">
+                <p class="text-muted mb-1">System Status</p>
+                <div class="stat-value text-success">Healthy</div>
+                <small class="text-muted">All services running</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECENT ADMIN ACTIONS -->
+    <div class="stat-card">
+        <h6 class="fw-semibold mb-3">Recent Admin Actions</h6>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                Admin revoked access to <strong>AuditReport.pdf</strong>
+            </li>
+            <li class="list-group-item">
+                User <strong>spam@fake.com</strong> disabled
+            </li>
+            <li class="list-group-item">
+                Download limit policy updated
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<script th:src="@{/js/adminjs/admin_dashboard.js}"></script>
+
+</body>
+</html>

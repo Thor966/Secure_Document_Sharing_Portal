@@ -1,0 +1,34 @@
+ body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
+            padding-top: 80px;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .page-title {
+            font-weight: 800;
+        }
+
+        .notification-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .notification-item {
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .notification-item.unread {
+            background: #eef2ff;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: #64748b;
+        }

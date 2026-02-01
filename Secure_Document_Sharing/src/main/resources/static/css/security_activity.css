@@ -1,0 +1,41 @@
+ body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            padding-top: 80px;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+        }
+
+        .page-title {
+            font-weight: 800;
+        }
+
+        .activity-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .activity-item {
+            padding: 14px 12px;
+            border-radius: 12px;
+        }
+
+        .activity-item + .activity-item {
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .badge-security {
+            background: #eef2ff;
+            color: #4f46e5;
+        }

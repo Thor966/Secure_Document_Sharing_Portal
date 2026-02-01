@@ -1,0 +1,61 @@
+ :root {
+            --primary: #4f46e5;
+            --secondary: #06b6d4;
+            --dark: #0f172a;
+            --light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            padding-top: 80px;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+        }
+
+        .dashboard-header h2 {
+            font-weight: 800;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            height: 100%;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .badge-secure {
+            background-color: #e0e7ff;
+            color: var(--primary);
+        }
+
+        .action-btn {
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+         .col-md-3
+        {
+            cursor: pointer;
+        }

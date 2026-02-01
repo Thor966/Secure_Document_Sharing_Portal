@@ -1,0 +1,65 @@
+  :root {
+            --primary: #4f46e5;
+            --secondary: #06b6d4;
+            --dark: #0f172a;
+            --light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            padding-top: 80px;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+        }
+
+        .page-title {
+            font-weight: 800;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .badge-secure {
+            background-color: #e0e7ff;
+            color: var(--primary);
+        }
+
+        .action-btn {
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        
+        
+        
+        
+        /* Modern Copy Button */
+.btn-copy {
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-copy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    opacity: 0.95;
+}
+
+.btn-copy:active {
+    transform: scale(0.98);
+}
+        
