@@ -1,5 +1,7 @@
 package com.doc.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +10,7 @@ import com.doc.dto.DocumentPermissionsDTO;
 import com.doc.dto.DocumentsDTO;
 import com.doc.entity.DocumentPermissions;
 import com.doc.entity.Documents;
+import com.doc.entity.User;
 
 public interface IDocumentsService 
 {
@@ -34,5 +37,9 @@ public interface IDocumentsService
 	
 	// access Document By Link
 	public DocumentPermissions accessDocByLink(String token);
+	
+	
+	// get the document the for secure doc user 
+	public Page<DocumentPermissionsDTO> getShareWithMeData(String grantedToUser, String shareType, Pageable pageable);
 
 }

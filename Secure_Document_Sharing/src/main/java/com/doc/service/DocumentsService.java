@@ -8,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -360,6 +361,42 @@ public class DocumentsService implements IDocumentsService
 		
 		return docPermission.findBySecureToken(token).orElseThrow(()-> new IllegalAccessError("Invalid or Expired Link"));
 	}
+	
+	
+	
+	// get Docmunets to the Secure doc User(Shared Doc)
+	@Override
+	public Page<DocumentPermissionsDTO> getShareWithMeData(String grantedToUser, String shareType, Pageable pageable) {
+		
+		
+		// call the repository method
+		Page<DocumentPermissions> permission = docPermission.findByGrantedToUserAndShareType(grantedToUser, shareType, pageable);
+		
+		// set the entity data in the dto
+		
+		
+		return  permission.map(perm -> {
+
+	        DocumentPermissionsDTO dto =
+	                new DocumentPermissionsDTO();
+
+	     
+	        dto.setDocumentName(perm.getDocumentId().getOriginalName());
+	        dto.setGrantedBy(perm.getGrantedBy().getEmail());
+	        dto.setShareType(perm.getShareType());
+	        dto.setAccessType(perm.getAccessType());
+	        dto.setFilePath(perm.getDocumentId().getFilePath());
+	        dto.setExpiryTime(perm.getExpiryTime());
+	        dto.setStatus(perm.getStatus());
+	        
+	        return dto;
+	    });
+	}
+	
+	
+	
+	
+	
 	
 	
 	

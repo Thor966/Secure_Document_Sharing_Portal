@@ -79,4 +79,18 @@ public class PageLoader
 	{
 		return "document_preview";
 	}
+	
+	
+	@GetMapping("/share-with-me")
+	public String shareWithMe()
+	{
+		return "share_with_me";
+	}
+	
+	
+	@GetMapping("/securityActivity")
+	public String securityActivity()
+	{
+		return "security_activity";
+	}
 }

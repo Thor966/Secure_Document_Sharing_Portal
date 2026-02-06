@@ -11,6 +11,9 @@
 
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <link th:href="@{/css/share_with_me.css}" rel="stylesheet">
 </head>
@@ -82,7 +85,8 @@
 
     <!-- HEADER -->
     <div class="mb-4">
-        <h2 class="page-title">Shared With Me</h2>
+        <h2 class="page-title"><a href="/Secure_Document_Sharing/dashboard" class="bi bi-arrow-left text-decoration-none fs-3 fw-bolder me-2 text-dark"></a>
+         				Shared With Me</h2>
         <p class="text-muted">
             Documents shared with you by other users
         </p>
@@ -103,58 +107,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
-
-                    <!-- ACTIVE -->
-                    <tr>
-                        <td>SalarySlip.pdf</td>
-                        <td>hr@company.com</td>
-                        <td>OTP</td>
-                        <td>2 days</td>
-                        <td>
-                            <span class="badge badge-secure">Active</span>
-                        </td>
-                        <td class="text-end">
-                            <a th:href="@{/access/abc123}"
-                               class="btn btn-sm btn-outline-primary action-btn">
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                    <!-- EXPIRED -->
-                    <tr>
-                        <td>OfferLetter.pdf</td>
-                        <td>hr@company.com</td>
-                        <td>Password</td>
-                        <td>Expired</td>
-                        <td>
-                            <span class="badge bg-secondary">Expired</span>
-                        </td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-secondary action-btn" disabled>
-                                View
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- REVOKED -->
-                    <tr>
-                        <td>AuditReport.pdf</td>
-                        <td>auditor@firm.com</td>
-                        <td>OTP</td>
-                        <td>—</td>
-                        <td>
-                            <span class="badge bg-danger">Revoked</span>
-                        </td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-secondary action-btn" disabled>
-                                View
-                            </button>
-                        </td>
-                    </tr>
-
-                </tbody>
+                <tbody id="viewSecureDocTableBody"></tbody>
             </table>
         </div>
     </div>
@@ -162,6 +115,49 @@
 </section>
 
 
+
+<!-- View Document Modal -->
+    <div class="modal fade" id="viewSecureDocumentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="bi bi-file text-primary fs-4 fw-bold"></i>
+                    <h5 class="modal-title fw-bold" id="documentModalLabel">Document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="text-center">
+                        <h6 class="mb-3" id="secureDocName">>Document</h6>
+                        <img id="secureDocImage" alt="Customer Model Image" class="img-fluid" />  
+                        
+                        <!-- PDF preview -->
+    					<iframe id="secureDocPdf" class="w-100 d-none" style="height:500px;"></iframe>
+
+   					 <!-- Text preview -->
+   						 <pre id="secureDocText" class="d-none text-start"></pre>
+
+    				<!-- Fallback message -->
+			   			 <p id="secureNoPreview" class="text-muted d-none">
+			       			 Preview not available. Please download the file.
+   						 </p>
+   					
+                    </div>
+                    
+                   <div class="modal-footer">
+    				<button id="secureDownloadBtn" class="btn btn-primary">
+      				  Download
+    				</button>
+					</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/share_with_me.js}"></script>
 
 </body>

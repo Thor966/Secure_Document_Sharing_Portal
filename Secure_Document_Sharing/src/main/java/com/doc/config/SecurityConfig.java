@@ -59,7 +59,7 @@ public class SecurityConfig
 						"/login","/register",
 						"/get-username", "/Secure_Document_Sharing/uploads/**", "/uploads/**", 
 						"/fetchDocumentDetails", "/docaccess/{token}", "/docaccess/verify",
-						"/api/preview/{token}", "/download/{token}",
+						"/api/preview/{token}", "/download/{token}","/fetchSecureDoc",
 						
 						
 						

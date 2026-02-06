@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -26,14 +28,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.doc.dto.DocumentPermissionsDTO;
 import com.doc.dto.DocumentsDTO;
 import com.doc.dto.UserDTO;
 import com.doc.entity.DocumentPermissions;
+import com.doc.entity.User;
 import com.doc.repository.DocumentPermissionsRepository;
+import com.doc.repository.UserRepository;
 import com.doc.service.IDocumentsService;
 import com.doc.service.IuserService;
 import com.doc.util.ConfirmationEmail;
+
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -48,6 +54,10 @@ public class DocumentController
 	private IuserService userService;
 	
 	@Autowired
+	private UserRepository userRepo;
+	
+	
+	@Autowired
 	private DocumentPermissionsRepository docPermission;
 	
 	@Autowired
@@ -58,6 +68,7 @@ public class DocumentController
 	  private String uploadDir;
 	
 	
+	 // get the loggedin user
 	public UserDTO getLoggedInUser()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -255,8 +266,6 @@ public class DocumentController
 	@GetMapping("/docaccess/{token}")
 	public ResponseEntity<?> accessDocumentByLink(@PathVariable("token") String token)
 	{
-		
-		System.out.println("Access token received: " + token);
 
 		// get the document by token
 		DocumentPermissions dp =  docService.accessDocByLink(token);
@@ -383,11 +392,8 @@ public class DocumentController
 	
 	// download the doc by token
 	@GetMapping("/secure-download/{token}")
-	public ResponseEntity<Resource> downloadDocument(@PathVariable String token) throws Exception {
-
-		System.out.println("SECURE DOWNLOAD HIT");
-
-
+	public ResponseEntity<Resource> downloadDocument(@PathVariable String token) throws Exception 
+	{
 	    // Get permission by token
 	    DocumentPermissions dp = docService.accessDocByLink(token);
 
@@ -430,7 +436,21 @@ public class DocumentController
 
 	
 	
+	// fetch the document for the Secure Doc user (Shared Documents)
 	
+	@GetMapping("/fetchSecureDoc")
+	public ResponseEntity<?> fetchShareWithMeDoc(@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.ASC) Pageable pageable)
+	{
+		
+		// get the first logged in user
+		UserDTO user = getLoggedInUser();
+	
+		// get the service class method
+		Page<DocumentPermissionsDTO> secureDoc = docService.getShareWithMeData(user.getEmail(), "SecureDocs", pageable);
+		
+		return  ResponseEntity.ok(secureDoc);
+		
+	}
 	
 	
 	

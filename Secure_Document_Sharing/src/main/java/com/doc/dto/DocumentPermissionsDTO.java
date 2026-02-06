@@ -12,6 +12,7 @@ public class DocumentPermissionsDTO {
     private Long dpid;
     private Long documentId;
     private String documentName;
+    private String filePath;
     private String grantedBy;
     private String grantedToUser;
     private LocalDateTime expiryTime;
