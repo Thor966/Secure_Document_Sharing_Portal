@@ -1,22 +1,20 @@
 package com.doc.service;
 
-import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.doc.dto.DocumentPermissionsDTO;
 import com.doc.dto.DocumentsDTO;
+import com.doc.dto.UserDTO;
 import com.doc.entity.DocumentPermissions;
 import com.doc.entity.Documents;
-import com.doc.entity.User;
 
 public interface IDocumentsService 
 {
 	
 	// save the Documents details
-	public Documents saveDocumetsDetails(MultipartFile docFile);
+	public Documents saveDocumetsDetails(MultipartFile docFile, String username);
 	
 	// get documents details
 	public Page<DocumentsDTO> getDocumentData(String username, Pageable pageable);

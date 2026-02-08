@@ -33,9 +33,11 @@ import com.doc.dto.DocumentPermissionsDTO;
 import com.doc.dto.DocumentsDTO;
 import com.doc.dto.UserDTO;
 import com.doc.entity.DocumentPermissions;
+import com.doc.entity.ManageAction;
 import com.doc.entity.User;
 import com.doc.repository.DocumentPermissionsRepository;
 import com.doc.repository.UserRepository;
+import com.doc.service.IAuditLogsService;
 import com.doc.service.IDocumentsService;
 import com.doc.service.IuserService;
 import com.doc.util.ConfirmationEmail;
@@ -63,6 +65,9 @@ public class DocumentController
 	@Autowired
 	private ConfirmationEmail emailConfirmation;
 	
+	@Autowired
+	private IAuditLogsService logService;
+	
 	
 	 @Value("${upload.path}")
 	  private String uploadDir;
@@ -82,10 +87,13 @@ public class DocumentController
 	// upload the documents
 	
 	@PostMapping("/uploadDocuments")
-	public ResponseEntity<String> saveDocuments(@RequestParam("filePath") MultipartFile filePath)
+	public ResponseEntity<String> saveDocuments(@RequestParam("filePath") MultipartFile filePath, String username)
 	{
+		// get the logged in user
+		UserDTO user = getLoggedInUser();
+		
 		// get the service class method
-		 docService.saveDocumetsDetails(filePath);
+		 docService.saveDocumetsDetails(filePath, user.getEmail());
 		String msg = "Document Added Successfully...";
 		return new ResponseEntity<String>(msg,HttpStatus.OK);
 	}
@@ -136,6 +144,7 @@ public class DocumentController
 	    }
 
 	    String fileName = file.getFileName().toString();
+	    
 	    
 	    return ResponseEntity.ok()
 	            .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
@@ -333,18 +342,32 @@ public class DocumentController
 
 	    //  OTP verification
 	    if (dp.getAccessType().equals("OTP")) {
+	    	
+	    	// check OTP verification
 	        if (!value.equals(String.valueOf(dp.getDocOtp()))) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 	                    .body(Map.of("error", "Invalid OTP"));
 	        }
+	        
+	        
+	        // set the audit logs for OTP
+	        logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.OTP);
 	    }
 
+	    
+	    
 	    // Password verification
 	    if (dp.getAccessType().equals("PASSWORD")) {
+	    	
+	    	// check password validity
 	        if (!value.equals(dp.getDocPass())) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 	                    .body(Map.of("error", "Invalid password"));
 	        }
+	        
+	        
+	        // set the audit logs for PASSWORD
+	        logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.PASSWORD);
 	    }
 
 	    //  Verified → redirect to preview page
@@ -383,6 +406,9 @@ public class DocumentController
 	    response.put("expiry", dp.getExpiryTime());
 	    response.put("filePath", dp.getDocumentId().getFilePath());
 	  
+	    
+	    //set the audit logs for view
+	    logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.VIEW);
 
 	    return ResponseEntity.ok(response);
 	}
@@ -427,6 +453,10 @@ public class DocumentController
 	    }
 
 	    String fileName = file.getFileName().toString();
+	    
+	    
+	    //set the audit logs for view
+	    logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.DOWNLOAD);
 
 	    return ResponseEntity.ok()
 	            .header(HttpHeaders.CONTENT_DISPOSITION,

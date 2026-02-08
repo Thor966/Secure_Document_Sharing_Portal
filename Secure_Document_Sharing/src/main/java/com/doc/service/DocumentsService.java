@@ -1,6 +1,5 @@
 package com.doc.service;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,13 +7,11 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +20,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.doc.controller.UserController;
 import com.doc.dto.DocumentPermissionsDTO;
 import com.doc.dto.DocumentsDTO;
+import com.doc.dto.UserDTO;
 import com.doc.entity.DocumentPermissions;
 import com.doc.entity.Documents;
+import com.doc.entity.ManageAction;
 import com.doc.entity.User;
 import com.doc.repository.DocumentPermissionsRepository;
 import com.doc.repository.DocumentsRepository;
@@ -46,6 +46,10 @@ public class DocumentsService implements IDocumentsService
 	@Autowired
 	private DocumentPermissionsRepository docPermission;
 	
+	@Autowired
+	private IAuditLogsService auditService;
+	
+	
 	  @Value("${upload.path}")
 	  private String uploadDir;
 	
@@ -56,7 +60,7 @@ public class DocumentsService implements IDocumentsService
 	
 	@Override
 	@CacheEvict(value = "docCache", allEntries = true)
-	public Documents saveDocumetsDetails(MultipartFile docFile) {
+	public Documents saveDocumetsDetails(MultipartFile docFile, String userName) {
 		
 		
 		// Validate file exist or not
@@ -111,7 +115,17 @@ public class DocumentsService implements IDocumentsService
 		doc.setEncryptedKey(UUID.randomUUID().toString());
 		doc.setOwner(owner);
 		
-		return docRepo.save(doc);
+		// save the document
+		Documents document = docRepo.save(doc);
+		
+
+		// save the audit logs 
+		auditService.logAction(owner.getUid(), doc.getDocid(), null, ManageAction.UPLOAD);
+		
+		
+		return document;
+		
+	
 	}
 	
 	
@@ -235,6 +249,9 @@ public class DocumentsService implements IDocumentsService
 		
 		// save the data
 	    DocumentPermissions permission = docPermission.save(perm);
+	    
+	    // set the audit logs
+	    auditService.logAction(grantedBy.getUid(), docid, null, ManageAction.SHARE);
 		
 		
 		return permission;
@@ -307,6 +324,10 @@ public class DocumentsService implements IDocumentsService
 	                && dp.getStatus().equals("ACTIVE")) {
 
 	            dp.setStatus("EXPIRED");
+	            
+	            // set the audit logs
+			    auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.EXPIRED);
+			    
 	            docPermission.save(dp);  
 	        }
 
@@ -315,11 +336,14 @@ public class DocumentsService implements IDocumentsService
 	        // Remaining time
 	        String remaining = calculateRemainingTime(dp.getExpiryTime());
 	        dto.setRemainingTime(remaining);
+	        
+	       
 
 	        dtoList.add(dto);
 	    }
 		
 		
+	   
 		
 		return dtoList;
 	}
@@ -332,7 +356,6 @@ public class DocumentsService implements IDocumentsService
 	public DocumentPermissions revokeDocumentPermission(Long dpid) {
 		DocumentPermissions dp = docPermission.findById(dpid)
 									.orElseThrow(()-> new IllegalAccessError("Document Not Found..."));
-	
 		// set the status 
 		dp.setStatus("REVOKE");
 		
@@ -347,8 +370,10 @@ public class DocumentsService implements IDocumentsService
 		
 		
 		// update value  
-		
-			DocumentPermissions permission = docPermission.save(dp);
+		DocumentPermissions permission = docPermission.save(dp);
+			
+		// set the audit logs
+		auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dpid, ManageAction.REVOKE);
 		
 		return permission;
 	}
