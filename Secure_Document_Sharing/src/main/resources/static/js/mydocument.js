@@ -2,7 +2,7 @@ const CONTEXT_PATH = /*[[@{/}]]*/ '';
 
 
 /*fetch document*/
-fetch(CONTEXT_PATH + 'fetchDocumentDetails')
+/*fetch(CONTEXT_PATH + 'fetchDocumentDetails')
     .then(res => {
         if (!res.ok) throw new Error("Not logged in");
         return res.json();
@@ -44,9 +44,124 @@ fetch(CONTEXT_PATH + 'fetchDocumentDetails')
 		
     })
 	
-    .catch(err => console.error(err));
+    .catch(err => console.error(err));*/
 	
 
+	let currentPage = 0;
+	const pageSize = 10;
+
+	function loadDocuments(page = 0) {
+
+	    fetch(`${CONTEXT_PATH}fetchDocumentDetails?page=${page}&size=${pageSize}`)
+	        .then(res => {
+	            if (!res.ok) throw new Error("Not logged in");
+	            return res.json();
+	        })
+	        .then(data => {
+
+				currentPage = data.currentPage;
+
+	            renderTable(data.content);
+	            renderPagination(data);
+	        })
+	        .catch(err => console.error(err));
+	}
+
+	
+	document.addEventListener("DOMContentLoaded", function () {
+	    loadDocuments(0);
+	});
+
+	
+	
+	
+	// Render Table
+	function renderTable(docs) {
+
+	    const tbody = document.getElementById("docTableBody");
+	    tbody.innerHTML = "";
+
+	    docs.forEach(doc => {
+
+	        const row = document.createElement("tr");
+
+	        row.innerHTML = `
+	            <td>${doc.storedName}</td>
+	            <td>${doc.insertedOn}</td>
+	            <td class="text-end">
+	                <button class="btn btn-sm btn-outline-info me-2 view-btn"
+	                        data-bs-toggle="modal"
+	                        data-bs-target="#viewdocumentModal"
+	                        data-filepath="${doc.filePath}"
+	                        data-filename="${doc.storedName}">
+	                    View
+	                </button>
+
+	                <button class="btn btn-sm btn-outline-secondary share-btn"
+	                        data-bs-toggle="modal"
+	                        data-bs-target="#shareModal"
+	                        data-docid="${doc.docid}"
+	                        data-originalname="${doc.storedName}">
+	                    Share
+	                </button>
+	            </td>
+	        `;
+
+	        tbody.appendChild(row);
+	    });
+	}
+	
+	
+	
+	
+	// Render Pagination Buttons
+	function renderPagination(pageData) {
+
+	    const container = document.getElementById("paginationContainer");
+	    container.innerHTML = "";
+
+	    // Previous
+	    if (!pageData.first) {
+	        container.innerHTML += `
+	            <button class="btn btn-outline-primary mx-1"
+	                    onclick="loadDocuments(${pageData.currentPage - 1})">
+	                Previous
+	            </button>
+	        `;
+	    }
+
+	    // Page Numbers
+	    for (let i = 0; i < pageData.totalPages; i++) {
+
+	        container.innerHTML += `
+	            <button class="btn mx-1 
+	                ${i === pageData.currentPage ? 'btn-primary' : 'btn-outline-primary'}"
+	                onclick="loadDocuments(${i})">
+	                ${i + 1}
+	            </button>
+	        `;
+	    }
+
+	    // Next
+	    if (!pageData.last) {
+	        container.innerHTML += `
+	            <button class="btn btn-outline-primary mx-1"
+	                    onclick="loadDocuments(${pageData.currentPage + 1})">
+	                Next
+	            </button>
+	        `;
+	    }
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// View btn click event
 	
 	document.addEventListener("click", function (e) {
@@ -349,62 +464,128 @@ document.addEventListener("DOMContentLoaded", function () {
 	
 	  /* manage Document */
 
-	  function loadManageDocuments() {
+	
+	  let permissionCurrentPage = 0;
+	  const permissionPageSize = 10;
 
-	      fetch(CONTEXT_PATH + 'docPermission')
-	          .then(res => {
-	              if (!res.ok) throw new Error("Not logged in");
-	              return res.json();
-	          })
+	  function loadManageDocuments(page = 0) {
+
+	      fetch(`${CONTEXT_PATH}docPermission?page=${page}&size=${permissionPageSize}`)
+	          .then(res => res.json())
 	          .then(data => {
 
-	              console.log("Permission Data:", data);
+	              permissionCurrentPage = data.currentPage;
 
-	              const tbody = document.getElementById("manageDocTableBody");
-	              tbody.innerHTML = "";
+	              renderPermissionTable(data.content);
+	              renderPermissionPagination(data);
 
-	              data.forEach(doc => {
-
-	                  const row = document.createElement("tr");
-
-	                  // Status colour logic
-	                  let statusClass = "bg-secondary";
-
-	                  if (doc.status === "ACTIVE") statusClass = "bg-success";
-	                  else if (doc.status === "REVOKED") statusClass = "bg-danger";
-	                  else if (doc.status === "EXPIRED") statusClass = "bg-warning";
-
-	                  row.innerHTML = `
-	                      <td>${doc.documentName}</td>
-	                      <td>${doc.accessType}</td>
-	                      <td>${doc.grantedToUser}</td>
-	                      <td>${doc.remainingTime}</td>
-	                      <td>
-	                          <span class="badge ${statusClass}">
-	                              ${doc.status}
-	                          </span>
-	                      </td>
-	                      <td class="text-end">
-	                          <button class="btn btn-sm btn-outline-danger"
-	                                  onclick="revokePermission(${doc.dpid})"
-	                                  ${doc.status !== "ACTIVE" ? "disabled" : ""}>
-	                              Revoke
-	                          </button>
-	                      </td>
-	                  `;
-
-	                  tbody.appendChild(row);
-	              });
 	          })
-	          .catch(err => console.error("Error loading permissions:", err));
+	          .catch(err =>
+	              console.error("Error loading permissions:", err)
+	          );
 	  }
 
 	  
 	  
+	  // Render Table
+	  function renderPermissionTable(docs) {
+
+	      const tbody = document.getElementById("manageDocTableBody");
+	      tbody.innerHTML = "";
+
+	      docs.forEach(doc => {
+
+	          let statusClass = "bg-secondary";
+
+	          if (doc.status === "ACTIVE") statusClass = "bg-success";
+	          else if (doc.status === "REVOKED") statusClass = "bg-danger";
+	          else if (doc.status === "EXPIRED") statusClass = "bg-warning";
+
+	          const row = document.createElement("tr");
+
+	          row.innerHTML = `
+	              <td>${doc.documentName}</td>
+	              <td>${doc.accessType}</td>
+	              <td>${doc.grantedToUser}</td>
+	              <td>${doc.remainingTime}</td>
+	              <td>
+	                  <span class="badge ${statusClass}">
+	                      ${doc.status}
+	                  </span>
+	              </td>
+	              <td class="text-end">
+	                  <button class="btn btn-sm btn-outline-danger"
+	                          onclick="revokePermission(${doc.dpid})"
+	                          ${doc.status !== "ACTIVE" ? "disabled" : ""}>
+	                      Revoke
+	                  </button>
+	              </td>
+	          `;
+
+	          tbody.appendChild(row);
+	      });
+	  }
+	  
+	  
+	  
+	  // pagination controls
+	  function renderPermissionPagination(pageData) {
+
+	      const container =
+	          document.getElementById("permissionPagination");
+
+	      container.innerHTML = "";
+
+	      // Previous
+	      if (!pageData.first) {
+	          container.innerHTML += `
+	              <button class="btn btn-outline-primary mx-1"
+	                      onclick="loadManageDocuments(${pageData.currentPage - 1})">
+	                  Previous
+	              </button>
+	          `;
+	      }
+
+	      // Page Numbers
+	      for (let i = 0; i < pageData.totalPages; i++) {
+
+	          container.innerHTML += `
+	              <button class="btn mx-1 
+	                  ${i === pageData.currentPage
+	                      ? 'btn-primary'
+	                      : 'btn-outline-primary'}"
+	                  onclick="loadManageDocuments(${i})">
+	                  ${i + 1}
+	              </button>
+	          `;
+	      }
+
+	      // Next
+	      if (!pageData.last) {
+	          container.innerHTML += `
+	              <button class="btn btn-outline-primary mx-1"
+	                      onclick="loadManageDocuments(${pageData.currentPage + 1})">
+	                  Next
+	              </button>
+	          `;
+	      }
+	  }
+
+	  
+	  
+	  
 	  document.addEventListener("DOMContentLoaded", function () {
-	      loadManageDocuments();
+	      loadManageDocuments(0);
 	  });
-  
+
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
 	
 	  
 	    

@@ -104,7 +104,7 @@ public class DocumentController
 	
 	// fetch the documents
 	@GetMapping("/fetchDocumentDetails")
-	public ResponseEntity<Page<DocumentsDTO>> fetchDocumentName(
+	public ResponseEntity<?> fetchDocumentName(
 											@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.ASC)
 											Pageable pageable)
 	{
@@ -116,7 +116,17 @@ public class DocumentController
 		// get the service class method 
 		Page<DocumentsDTO> doc =  docService.getDocumentData(userName, pageable);
 		
-		return new ResponseEntity<Page<DocumentsDTO>>(doc,HttpStatus.OK);
+		 Map<String, Object> response = new HashMap<>();
+
+		    response.put("content", doc.getContent());
+		    response.put("currentPage", doc.getNumber());
+		    response.put("pageSize", doc.getSize());
+		    response.put("totalElements", doc.getTotalElements());
+		    response.put("totalPages", doc.getTotalPages());
+		    response.put("first", doc.isFirst());
+		    response.put("last", doc.isLast());
+		
+		return ResponseEntity.ok(response);
 	}
 	
 	
@@ -232,17 +242,28 @@ public class DocumentController
 	
 	// get Document permissionData
 	@GetMapping("/docPermission")
-	public ResponseEntity<Iterable<DocumentPermissionsDTO>> fetchDocumentPermissionData()
+	public ResponseEntity<?> fetchDocumentPermissionData(
+														@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC)
+														Pageable pageable)
 	{
 		
 		// get the logged in user
 		UserDTO user = getLoggedInUser();
 		
-		String username = user.getEmail();
 		// get the service class method
-		Iterable<DocumentPermissionsDTO> docPerm = docService.getDocumentPermission(username);
+		Page<DocumentPermissionsDTO> docPerm = docService.getDocumentPermission(user.getEmail(), pageable);
 		
-		return new ResponseEntity<Iterable<DocumentPermissionsDTO>>(docPerm,HttpStatus.OK);
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("content", docPerm.getContent());
+	    response.put("currentPage", docPerm.getNumber());
+	    response.put("pageSize", docPerm.getSize());
+	    response.put("totalElements", docPerm.getTotalElements());
+	    response.put("totalPages", docPerm.getTotalPages());
+	    response.put("first", docPerm.isFirst());
+	    response.put("last", docPerm.isLast());
+		
+		return ResponseEntity.ok(response);
 		
 	}
 	

@@ -26,7 +26,7 @@ public interface IDocumentsService
 								 String expiry, String grantedByUsername);
 	
 	// get documents permissions Data
-	public Iterable<DocumentPermissionsDTO> getDocumentPermission(String username);
+	public Page<DocumentPermissionsDTO> getDocumentPermission(String username, Pageable pageable);
 	
 	
 	// Revoke the Document Permission

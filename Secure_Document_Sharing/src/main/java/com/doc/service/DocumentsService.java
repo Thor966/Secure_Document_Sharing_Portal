@@ -293,59 +293,92 @@ public class DocumentsService implements IDocumentsService
 	
 	// get Document Permission Data
 	@Override
-	@Cacheable(value="docPermissionCache", key="#username")
-	public Iterable<DocumentPermissionsDTO> getDocumentPermission(String username) {
+	public Page<DocumentPermissionsDTO> getDocumentPermission(String username, Pageable pageable) {
 		
 		User user = userRepo.findByemail(username).orElseThrow(()-> new IllegalArgumentException("User Not Found..."));
 		
 		// get doc permissions
-		List<DocumentPermissions> docPerm = docPermission.findByGrantedBy(user);
+		Page<DocumentPermissions> docPerm = docPermission.findByGrantedBy(user, pageable);
 		
-		// Convert Entity → DTO
-	    List<DocumentPermissionsDTO> dtoList = new ArrayList<>();
-
-	    for (DocumentPermissions dp : docPerm) {
-
-	        DocumentPermissionsDTO dto = new DocumentPermissionsDTO();
-
-	        dto.setDpid(dp.getDpid());
-	        dto.setDocumentId(dp.getDocumentId().getDocid());
-	        dto.setDocumentName(dp.getDocumentId().getOriginalName());
-	        dto.setGrantedToUser(dp.getGrantedToUser());
-	        dto.setGrantedBy(dp.getGrantedBy().getEmail());
-	        dto.setExpiryTime(dp.getExpiryTime());
-	        dto.setAccessType(dp.getAccessType().toLowerCase());
-	        dto.setStatus(dp.getStatus());
-	        dto.setInsertedOn(dp.getInsertedOn());
-	        
-	        
-	     //  Auto mark expired
-	        if (dp.getExpiryTime() != null && dp.getExpiryTime().isBefore(LocalDateTime.now())
-	                && dp.getStatus().equals("ACTIVE")) {
-
-	            dp.setStatus("EXPIRED");
-	            
-	            // set the audit logs
-			    auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.EXPIRED);
-			    
-	            docPermission.save(dp);  
-	        }
-
-	        dto.setStatus(dp.getStatus());
-
-	        // Remaining time
-	        String remaining = calculateRemainingTime(dp.getExpiryTime());
-	        dto.setRemainingTime(remaining);
-	        
-	       
-
-	        dtoList.add(dto);
-	    }
 		
+				return docPerm.map(dp->{
+					DocumentPermissionsDTO dto = new DocumentPermissionsDTO();
+					
+					dto.setDpid(dp.getDpid());
+			        dto.setDocumentId(dp.getDocumentId().getDocid());
+			        dto.setDocumentName(dp.getDocumentId().getOriginalName());
+			        dto.setGrantedToUser(dp.getGrantedToUser());
+			        dto.setGrantedBy(dp.getGrantedBy().getEmail());
+			        dto.setExpiryTime(dp.getExpiryTime());
+			        dto.setAccessType(dp.getAccessType().toLowerCase());
+			        dto.setStatus(dp.getStatus());
+			        dto.setInsertedOn(dp.getInsertedOn());
+			        
+			        
+			     //  Auto mark expired
+			        if (dp.getExpiryTime() != null && dp.getExpiryTime().isBefore(LocalDateTime.now())
+			                && dp.getStatus().equals("ACTIVE")) {
+
+			            dp.setStatus("EXPIRED");
+			            
+			            // set the audit logs
+					    auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.EXPIRED);
+					    
+			            docPermission.save(dp);  
+			        }
+
+			        dto.setStatus(dp.getStatus());
+
+			        // Remaining time
+			        String remaining = calculateRemainingTime(dp.getExpiryTime());
+			        dto.setRemainingTime(remaining);
+			        
+			       
+
+			        return dto;
+				});
+		
+		/*
+		 * // Convert Entity → DTO Page<DocumentPermissionsDTO> dtoList = new
+		 * ArrayList<>();
+		 * 
+		 * for (DocumentPermissions dp : docPerm) {
+		 * 
+		 * DocumentPermissionsDTO dto = new DocumentPermissionsDTO();
+		 * 
+		 * dto.setDpid(dp.getDpid()); dto.setDocumentId(dp.getDocumentId().getDocid());
+		 * dto.setDocumentName(dp.getDocumentId().getOriginalName());
+		 * dto.setGrantedToUser(dp.getGrantedToUser());
+		 * dto.setGrantedBy(dp.getGrantedBy().getEmail());
+		 * dto.setExpiryTime(dp.getExpiryTime());
+		 * dto.setAccessType(dp.getAccessType().toLowerCase());
+		 * dto.setStatus(dp.getStatus()); dto.setInsertedOn(dp.getInsertedOn());
+		 * 
+		 * 
+		 * // Auto mark expired if (dp.getExpiryTime() != null &&
+		 * dp.getExpiryTime().isBefore(LocalDateTime.now()) &&
+		 * dp.getStatus().equals("ACTIVE")) {
+		 * 
+		 * dp.setStatus("EXPIRED");
+		 * 
+		 * // set the audit logs auditService.logAction(dp.getGrantedBy().getUid(),
+		 * dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.EXPIRED);
+		 * 
+		 * docPermission.save(dp); }
+		 * 
+		 * dto.setStatus(dp.getStatus());
+		 * 
+		 * // Remaining time String remaining =
+		 * calculateRemainingTime(dp.getExpiryTime()); dto.setRemainingTime(remaining);
+		 * 
+		 * 
+		 * 
+		 * dtoList.add(dto); }
+		 */
 		
 	   
 		
-		return dtoList;
+//		return dtoList;
 	}
 	
 	
