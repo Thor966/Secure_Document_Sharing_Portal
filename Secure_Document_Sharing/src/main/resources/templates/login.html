@@ -54,13 +54,17 @@
                         <form th:action="@{/login}" method="post">
 
                             <div class="mb-3">
-                                <label class="form-label">Email Address</label>
+                                <label class="form-label">Email Address
+                                	<sup class="bi bi-asterisk text-danger ms-1" style="font-size: 0.5rem;"></sup>
+                                </label>
                                 <input type="email" name="username" class="form-control" placeholder="Enter your email"
                                     required>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Password</label>
+                                <label class="form-label">Password
+                                	<sup class="bi bi-asterisk text-danger ms-1" style="font-size: 0.5rem;"></sup>
+                                </label>
                                 <div class="password-wrapper">
                                     <input type="password" id="password" name="password" class="form-control"
                                         placeholder="Enter your password" required>

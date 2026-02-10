@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Policy | SecureDocs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/privacy.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold" th:href="@{/}">
+        SecureDocs
+    </a>
+</nav>
+
+<section class="policy-section container">
+      <div class="policy-card">
+            <h1>Security Policy</h1>
+
+            <h4>1. Authentication & Access Control</h4>
+            <p>
+                SecureDocs implements multi-layer authentication including OTP verification,
+                password protection, and secure token-based link validation.
+            </p>
+
+            <h4>2. Time-Based Access Enforcement</h4>
+            <p>
+                Documents can be configured with expiry rules. Expired or revoked links
+                are automatically disabled and cannot be reused.
+            </p>
+
+            <h4>3. Secure Link Architecture</h4>
+            <p>
+                Each shared document generates a unique secure token validated server-side
+                before access is granted.
+            </p>
+
+            <h4>4. Monitoring & Logging</h4>
+            <p>
+                Access attempts, expiry events, and revocations are logged for auditing
+                and security compliance purposes.
+            </p>
+
+            <h4>5. Vulnerability Disclosure</h4>
+            <p>
+                If you identify a potential security vulnerability, please report it responsibly to:
+                <br><strong>Email:</strong> aniketgawande966@gmail.com
+            </p>
+        </div>
+</section>
+
+</body>
+</html>

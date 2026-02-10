@@ -46,3 +46,26 @@ function togglePassword(inputId, icon) {
 	           alert(error.message);
 	       });
 	   });
+
+	   
+	   
+	   
+	   
+	   document.getElementById("password").addEventListener("input", function () {
+	              const value = this.value;
+	              const strengthText = document.getElementById("passwordStrength");
+
+	              let strength = "Weak";
+	              let color = "text-danger";
+
+	              if (value.length > 8 && /[A-Z]/.test(value) && /\d/.test(value)) {
+	                  strength = "Strong";
+	                  color = "text-success";
+	              } else if (value.length > 6) {
+	                  strength = "Medium";
+	                  color = "text-warning";
+	              }
+
+	              strengthText.innerText = "Password Strength: " + strength;
+	              strengthText.className = color;
+	          });

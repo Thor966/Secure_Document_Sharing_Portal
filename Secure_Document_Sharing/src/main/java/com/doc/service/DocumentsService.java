@@ -258,6 +258,8 @@ public class DocumentsService implements IDocumentsService
 	}
 	
 	
+	
+	
 	// calculate the Expiry time
 	private String calculateRemainingTime(LocalDateTime expiryTime) {
 
@@ -338,47 +340,6 @@ public class DocumentsService implements IDocumentsService
 			        return dto;
 				});
 		
-		/*
-		 * // Convert Entity → DTO Page<DocumentPermissionsDTO> dtoList = new
-		 * ArrayList<>();
-		 * 
-		 * for (DocumentPermissions dp : docPerm) {
-		 * 
-		 * DocumentPermissionsDTO dto = new DocumentPermissionsDTO();
-		 * 
-		 * dto.setDpid(dp.getDpid()); dto.setDocumentId(dp.getDocumentId().getDocid());
-		 * dto.setDocumentName(dp.getDocumentId().getOriginalName());
-		 * dto.setGrantedToUser(dp.getGrantedToUser());
-		 * dto.setGrantedBy(dp.getGrantedBy().getEmail());
-		 * dto.setExpiryTime(dp.getExpiryTime());
-		 * dto.setAccessType(dp.getAccessType().toLowerCase());
-		 * dto.setStatus(dp.getStatus()); dto.setInsertedOn(dp.getInsertedOn());
-		 * 
-		 * 
-		 * // Auto mark expired if (dp.getExpiryTime() != null &&
-		 * dp.getExpiryTime().isBefore(LocalDateTime.now()) &&
-		 * dp.getStatus().equals("ACTIVE")) {
-		 * 
-		 * dp.setStatus("EXPIRED");
-		 * 
-		 * // set the audit logs auditService.logAction(dp.getGrantedBy().getUid(),
-		 * dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.EXPIRED);
-		 * 
-		 * docPermission.save(dp); }
-		 * 
-		 * dto.setStatus(dp.getStatus());
-		 * 
-		 * // Remaining time String remaining =
-		 * calculateRemainingTime(dp.getExpiryTime()); dto.setRemainingTime(remaining);
-		 * 
-		 * 
-		 * 
-		 * dtoList.add(dto); }
-		 */
-		
-	   
-		
-//		return dtoList;
 	}
 	
 	
@@ -413,8 +374,10 @@ public class DocumentsService implements IDocumentsService
 	
 	
 	
+	
 	// access Document by Link
 	@Override
+	@Cacheable(value="accessDocByLinkCache", key="#token")
 	public DocumentPermissions accessDocByLink(String token) {
 		
 		return docPermission.findBySecureToken(token).orElseThrow(()-> new IllegalAccessError("Invalid or Expired Link"));
@@ -450,11 +413,6 @@ public class DocumentsService implements IDocumentsService
 	        return dto;
 	    });
 	}
-	
-	
-	
-	
-	
 	
 	
 	

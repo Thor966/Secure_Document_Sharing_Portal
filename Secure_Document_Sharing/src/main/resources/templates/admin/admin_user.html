@@ -27,16 +27,16 @@
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-    <a th:href="@{/admin/dashboard}">
+    <a class="mt-4" th:href="@{/adminDashboard}">
         <i class="fa-solid fa-chart-line me-2"></i> Dashboard
     </a>
-    <a class="active" th:href="@{/admin/users}">
+    <a class="active" th:href="@{/manageUser}">
         <i class="fa-solid fa-users me-2"></i> Users
     </a>
-    <a th:href="@{/admin/documents}">
+    <a th:href="@{/manageDocument}">
         <i class="fa-solid fa-folder-open me-2"></i> Documents
     </a>
-    <a th:href="@{/admin/security}">
+    <a th:href="@{/manageSecurityLogs}">
         <i class="fa-solid fa-shield-check me-2"></i> Security Logs
     </a>
 </div>
@@ -45,6 +45,55 @@
 <div class="content">
 
     <h2 class="fw-bold mb-4">User Management</h2>
+    
+    
+    <!-- Search Bar -->
+        <form method="get" class="row g-2 mb-3">
+            <div class="col-md-4">
+                <input type="text" name="keyword" class="form-control" placeholder="Search by name or email">
+            </div>
+
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="DISABLED">Disabled</option>
+                    <option value="LOCKED">Locked</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100">
+                    Search
+                </button>
+            </div>
+        </form>
+
+
+        <!-- User statistics cards -->
+        <div class="row mb-4 mt-4 g-3">
+            <div class="col-md-4">
+                <div class="table-card text-center">
+                    <h6>Total Users</h6>
+                    <h4 th:text="${totalUsers}">0</h4>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="table-card text-center">
+                    <h6>Active Users</h6>
+                    <h4 class="text-success" th:text="${activeUsers}">0</h4>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="table-card text-center">
+                    <h6>Locked Users</h6>
+                    <h4 class="text-warning" th:text="${lockedUsers}">0</h4>
+                </div>
+            </div>
+        </div>
+    
 
     <div class="table-card">
         <div class="table-responsive">
@@ -55,6 +104,8 @@
                         <th>Email</th>
                         <th>Status</th>
                         <th>Last Login</th>
+                        <th>Joined On</th>
+                        <th>Storage Used</th>
                         <th class="text-end">Action</th>
                     </tr>
                 </thead>
@@ -64,20 +115,34 @@
                     <!-- ACTIVE USER -->
                     <tr>
                         <td>Aniket Gawande</td>
+                        
                         <td>aniket@gmail.com</td>
+                        
                         <td>
                             <span class="badge badge-active">Active</span>
                         </td>
+                        
                         <td>10 minutes ago</td>
+                        
+                       <td>24 Hour</td>  <!-- th:text="${#temporals.format(user.insertedOn,'dd-MM-yyyy')}" -->
+                       
+                        <td>125 MB</td>
+                        
                         <td class="text-end">
-                            <form th:action="@{/admin/users/disable}" method="post"
-                                  onsubmit="return confirm('Disable this user?');">
-                                <input type="hidden" name="userId" value="1">
-                                <button class="btn btn-sm btn-outline-danger">
-                                    Disable
-                                </button>
-                            </form>
-                        </td>
+
+                                <a href="#"
+                                    class="btn btn-sm btn-outline-primary me-1">
+                                    View
+                                </a>
+
+
+
+                                <a action="" 
+                                    class="btn btn-sm btn-outline-danger"
+                                    onsubmit="return confirm('Disable this user?');">
+                                        Disable
+                                </a>
+                            </td>
                     </tr>
 
                     <!-- DISABLED USER -->

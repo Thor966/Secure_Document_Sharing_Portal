@@ -10,7 +10,7 @@
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-    <link th:src="@{/css/admincss/admin_security_logs.css}" rel="stylesheet">
+    <link th:href="@{/css/admincss/admin_security_logs.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -27,16 +27,16 @@
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-    <a th:href="@{/admin/dashboard}">
+    <a class="mt-4" th:href="@{/adminDashboard}">
         <i class="fa-solid fa-chart-line me-2"></i> Dashboard
     </a>
-    <a th:href="@{/admin/users}">
+    <a th:href="@{/manageUser}">
         <i class="fa-solid fa-users me-2"></i> Users
     </a>
-    <a th:href="@{/admin/documents}">
+    <a th:href="@{/manageDocument}">
         <i class="fa-solid fa-folder-open me-2"></i> Documents
     </a>
-    <a class="active" th:href="@{/admin/security}">
+    <a class="active" th:href="@{/manageSecurityLogs}">
         <i class="fa-solid fa-shield-check me-2"></i> Security Logs
     </a>
 </div>

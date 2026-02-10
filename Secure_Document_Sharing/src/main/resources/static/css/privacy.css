@@ -1,0 +1,60 @@
+body {
+    background: radial-gradient(circle at top left, #1e293b, #020617);
+    color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.navbar {
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(10px);
+}
+
+.policy-section {
+    padding: 80px 20px;
+    max-width: 900px;
+}
+
+.policy-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: 50px 40px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.policy-section h1 {
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: #ffffff;
+}
+
+.policy-section h4 {
+    margin-top: 30px;
+    font-weight: 600;
+    color: #06b6d4;
+}
+
+.policy-section p {
+    color: #cbd5e1;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.policy-section strong {
+    color: #ffffff;
+}
+
+/* subtle fade animation */
+.policy-card {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

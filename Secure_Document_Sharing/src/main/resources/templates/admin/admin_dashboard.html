@@ -5,8 +5,10 @@
     <title>Admin Dashboard | SecureDocs</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
@@ -27,16 +29,16 @@
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-    <a class="active" th:href="@{/admin/dashboard}">
+    <a class="active mt-4" th:href="@{/adminDashboard}">
         <i class="fa-solid fa-chart-line me-2"></i> Dashboard
     </a>
-    <a th:href="@{/admin/users}">
+    <a th:href="@{/manageUser}">
         <i class="fa-solid fa-users me-2"></i> Users
     </a>
-    <a th:href="@{/admin/documents}">
+    <a th:href="@{/manageDocument}">
         <i class="fa-solid fa-folder-open me-2"></i> Documents
     </a>
-    <a th:href="@{/admin/security}">
+    <a th:href="@{/manageSecurityLogs}">
         <i class="fa-solid fa-shield-check me-2"></i> Security Logs
     </a>
 </div>
@@ -44,13 +46,30 @@
 <!-- CONTENT -->
 <div class="content">
 
-    <h2 class="fw-bold mb-4">Admin Dashboard</h2>
+    
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-1">
+            <h2 class="fw-bold mb-4">Admin Dashboard</h2>
+
+            <select class="form-select w-auto">
+                <option>Today</option>
+                <option>Last 7 Days</option>
+                <option>Last 15 Days</option>
+                <option>Last 30 Days</option>
+                
+            </select>
+
+            <button class="btn btn-outline-secondary" onclick="refreshDashboard()">
+                <i class="fa-solid fa-rotate"></i>
+            </button>
+        </div>
 
     <!-- KPI SUMMARY -->
     <div class="row g-4 mb-4">
         <div class="col-md-3">
             <div class="stat-card">
-                <p class="text-muted mb-1">Total Users</p>
+            	<i class="fa-solid fa-people-group stat-icon text-primary fs-4 mb-2"></i>
+                <p class="text-muted mb-1 fw-bold">Total Users</p>
                 <div class="stat-value">1,240</div>
                 <small class="text-success">+12 today</small>
             </div>
@@ -58,7 +77,8 @@
 
         <div class="col-md-3">
             <div class="stat-card">
-                <p class="text-muted mb-1">Documents Uploaded</p>
+            	 <i class="fa-solid fa-upload stat-icon text-primary fs-4 mb-2"></i>
+                <p class="text-muted mb-1 fw-bold">Documents Uploaded</p>
                 <div class="stat-value">6,430</div>
                 <small class="text-success">+84 today</small>
             </div>
@@ -66,7 +86,8 @@
 
         <div class="col-md-3">
             <div class="stat-card">
-                <p class="text-muted mb-1">Active Shares</p>
+            	<i class="fa-solid fa-share-nodes stat-icon text-primary fs-4 mb-2"></i>
+                <p class="text-muted mb-1 fw-bold">Active Shares</p>
                 <div class="stat-value">2,180</div>
                 <small class="text-muted">Across platform</small>
             </div>
@@ -74,7 +95,8 @@
 
         <div class="col-md-3">
             <div class="stat-card">
-                <p class="text-muted mb-1">Security Alerts</p>
+            	<i class="fa-solid bi bi-shield-fill-check stat-icon text-primary fs-4 mb-2"></i>
+                <p class="text-muted mb-1 fw-bold">Security Alerts</p>
                 <div class="stat-value text-danger">7</div>
                 <small class="text-danger">Needs attention</small>
             </div>
@@ -85,6 +107,7 @@
     <div class="row g-4 mb-4">
         <div class="col-md-6">
             <div class="stat-card">
+            	 <i class="fa-solid bi bi-activity stat-icon text-primary fs-5 mb-2"></i>
                 <h6 class="fw-semibold mb-3">User Activity Overview</h6>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">New registrations today: <strong>18</strong></li>
@@ -96,6 +119,7 @@
 
         <div class="col-md-6">
             <div class="stat-card">
+            	<i class="fa-solid bi bi-files stat-icon text-primary fs-5 mb-2"></i>
                 <h6 class="fw-semibold mb-3">Document Activity Overview</h6>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Documents uploaded today: <strong>84</strong></li>
@@ -104,6 +128,32 @@
                 </ul>
             </div>
         </div>
+        
+        <!-- Access Type Distribution -->
+         <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <p class="text-muted mb-1">OTP Protected Links</p>
+                        <div class="stat-value" th:text="${otpLinks}">0</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <p class="text-muted mb-1">Password Protected</p>
+                        <div class="stat-value" th:text="${passwordLinks}">0</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <p class="text-muted mb-1">Public Links</p>
+                        <div class="stat-value" th:text="${publicLinks}">0</div>
+                    </div>
+                </div>
+            </div>
+        
+        
     </div>
 
     <!-- SECURITY ALERTS -->
@@ -154,6 +204,32 @@
             </div>
         </div>
     </div>
+    
+    
+    <!-- Storage Usage Per User -->
+        <div class="stat-card mt-4 mb-5">
+            <h6 class="fw-semibold mb-3">Storage Usage Per User</h6>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Storage Used (MB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="row : ${storageUsage}">
+                        <td th:text="${row[0]}">email</td>
+                        <td th:text="${row[1] / 1024 / 1024}">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+    
+    
+    
+    
 
     <!-- RECENT ADMIN ACTIONS -->
     <div class="stat-card">
@@ -174,6 +250,8 @@
 </div>
 
 <script th:src="@{/js/adminjs/admin_dashboard.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 </html>

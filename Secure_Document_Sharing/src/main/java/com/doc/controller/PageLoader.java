@@ -20,11 +20,16 @@ public class PageLoader
 	private IuserService userService;
 	
 	
+	// launch home page
+	
 	@GetMapping("/")
 	public String home()
 	{
 		return"index";
 	}
+	
+	
+	// launch login page
 	
 	@GetMapping("/login")
 	public String login(@RequestParam(value = "error", required = false) String error,
@@ -40,12 +45,17 @@ public class PageLoader
 	}
 
 	
+	
+	// launch register page
 	@GetMapping("/register")
 	public String register()
 	{
 		return"register";
 	}
 	
+	
+	
+	// launch dashboard page
 	@GetMapping("/dashboard")
 	public String dashboard()
 	{
@@ -54,6 +64,7 @@ public class PageLoader
 	}
 	
 	
+	// launch my documents page
 	@GetMapping("/mydocuments")
 	public String myDocuments()
 	{
@@ -61,12 +72,17 @@ public class PageLoader
 	}
 	
 	
+	
+	// launch manage documents page
 	@GetMapping("/managedocuments")
 	public String manageDocuments()
 	{
 		return"managedocuments";
 	}
 	
+	
+	
+	// launch access document page
 	@GetMapping("/accessdocument")
 	public String accessDocument()
 	{
@@ -74,6 +90,8 @@ public class PageLoader
 	}
 	
 	
+	
+	// launch document-preview page
 	@GetMapping("/document-preview")
 	public String docPreview()
 	{
@@ -81,6 +99,8 @@ public class PageLoader
 	}
 	
 	
+	
+	// launch share-with-me page
 	@GetMapping("/share-with-me")
 	public String shareWithMe()
 	{
@@ -88,9 +108,70 @@ public class PageLoader
 	}
 	
 	
+	
+	// launch security activity page
 	@GetMapping("/securityActivity")
 	public String securityActivity()
 	{
 		return "security_activity";
 	}
+	
+	
+	// launch privacy page
+	@GetMapping("/privacyPolicy")
+	public String privacyPage()
+	{
+		return "privacy";
+	}
+	
+	
+	// launch terms page
+	@GetMapping("/terms")
+	public String termsPage()
+	{
+		return "terms";
+	}
+	
+	
+	// launch security policy page
+	@GetMapping("/securityPolicy")
+	public String securityPage()
+	{
+		return "security";
+	}
+	
+	
+	
+	// launching Admin Dashboard
+	@GetMapping("/adminDashboard")
+	public String manageAdminDashboard()
+	{
+		return "admin/admin_dashboard";
+	}
+	
+	
+	// launch Admin users page
+	@GetMapping("/manageUser")
+	public String manageAdminUsers()
+	{
+		return "admin/admin_user";
+	}
+	
+	
+	// launch Admin documents page
+	@GetMapping("/manageDocument")
+	public String manageAdminDocuments()
+	{
+		return "admin/admin_document";
+	}
+	
+	
+	// launch Admin security logs
+	@GetMapping("/manageSecurityLogs")
+	public String manageAdminSecurityLogs()
+	{
+		return "admin/admin_security_logs";
+	}
+	
+	
 }
