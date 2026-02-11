@@ -28,6 +28,9 @@ public interface DocumentPermissionsRepository extends JpaRepository<DocumentPer
 	
 	public Page<DocumentPermissions> findByGrantedBy(User grantedBy, Pageable pageable);
 	
+	// get the total active shared Document
+	public Long countByStatus(String status);
+	
 	
 
 

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,9 @@ public class SessionController {
     
     @Autowired
     private UserRepository userRepo;
+    
+    @Autowired
+    private SecurityConfig config;
 
     
 
@@ -47,4 +51,5 @@ public class SessionController {
         logger.warn("No User or Maid found for username: {}", username);
         return "redirect:/";
     }
+    
 }

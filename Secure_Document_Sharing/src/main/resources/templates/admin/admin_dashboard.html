@@ -70,17 +70,17 @@
             <div class="stat-card">
             	<i class="fa-solid fa-people-group stat-icon text-primary fs-4 mb-2"></i>
                 <p class="text-muted mb-1 fw-bold">Total Users</p>
-                <div class="stat-value">1,240</div>
-                <small class="text-success">+12 today</small>
+                <div class="stat-value" id="totalRegisterUserCount">1,240</div>
+                <small class="text-success">+<span id="totalDaywiseUserCount"></span> today</small>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="stat-card">
             	 <i class="fa-solid fa-upload stat-icon text-primary fs-4 mb-2"></i>
-                <p class="text-muted mb-1 fw-bold">Documents Uploaded</p>
-                <div class="stat-value">6,430</div>
-                <small class="text-success">+84 today</small>
+                <p class="text-muted mb-1 fw-bold" >Documents Uploaded</p>
+                <div class="stat-value" id="totalUploadedDocCount">6,430</div>
+                <small class="text-success" >+<span id="totalDaywiseDocCount"></span> today</small>
             </div>
         </div>
 
@@ -88,7 +88,7 @@
             <div class="stat-card">
             	<i class="fa-solid fa-share-nodes stat-icon text-primary fs-4 mb-2"></i>
                 <p class="text-muted mb-1 fw-bold">Active Shares</p>
-                <div class="stat-value">2,180</div>
+                <div class="stat-value" id="totalActiveShares">2,180</div>
                 <small class="text-muted">Across platform</small>
             </div>
         </div>
@@ -110,8 +110,8 @@
             	 <i class="fa-solid bi bi-activity stat-icon text-primary fs-5 mb-2"></i>
                 <h6 class="fw-semibold mb-3">User Activity Overview</h6>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">New registrations today: <strong>18</strong></li>
-                    <li class="list-group-item">Active users (24h): <strong>980</strong></li>
+                    <li class="list-group-item">New registrations today: <strong id="todaysRegisterUser">18</strong></li>
+                    <li class="list-group-item">Active users (24h): <strong id="activeUsers">980</strong></li>
                     <li class="list-group-item">Disabled users: <strong class="text-danger">14</strong></li>
                 </ul>
             </div>

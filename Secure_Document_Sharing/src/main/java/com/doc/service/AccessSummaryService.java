@@ -23,7 +23,6 @@ public class AccessSummaryService implements IAccessSummaryService
 	
 	// get the OTP based Documents Count
 	@Override
-	@Cacheable(value="otpSummaryCache", key="#username")
 	public Long getOTPBasedDocuments(String username) {
 		
 		// get the user object
@@ -39,7 +38,6 @@ public class AccessSummaryService implements IAccessSummaryService
 	
 	// get the Password Based Documents Count
 	@Override
-	@Cacheable(value="otpSummaryCache", key="#username")
 	public Long getPassBasedDocuments(String username) {
 		
 		// get the user object
@@ -54,7 +52,6 @@ public class AccessSummaryService implements IAccessSummaryService
 	
 	// get the Expired Documents Count
 	@Override
-	@Cacheable(value="otpSummaryCache", key="#username")
 	public Long getExpiredDocumentCount(String username) {
 		// get the user object
 		User user = userRepo.findByemail(username).orElseThrow(()-> new IllegalAccessError("User Not Found"));
