@@ -48,6 +48,11 @@ public class User implements Serializable {
 
 	private boolean enable = true;
 	
+	private String status;
+	
+	private LocalDateTime lastLogin;
+
+	
 	@OneToOne(targetEntity = AuthandAutho.class, cascade = CascadeType.ALL)
 	@JoinColumn(name="auth_id", referencedColumnName = "authid", nullable = false)
 	private AuthandAutho auth;

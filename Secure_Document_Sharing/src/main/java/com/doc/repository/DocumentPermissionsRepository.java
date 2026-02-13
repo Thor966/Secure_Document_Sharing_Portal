@@ -1,14 +1,15 @@
 package com.doc.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.doc.entity.DocumentPermissions;
+import com.doc.entity.ManageAction;
 import com.doc.entity.User;
 
 public interface DocumentPermissionsRepository extends JpaRepository<DocumentPermissions, Long>
@@ -30,6 +31,12 @@ public interface DocumentPermissionsRepository extends JpaRepository<DocumentPer
 	
 	// get the total active shared Document
 	public Long countByStatus(String status);
+	
+	// get the daywise expired doc count
+	public Long countByInsertedOnBetweenAndStatus(LocalDateTime start, LocalDateTime end, String status);
+	
+	// get the otp access type count
+	public Long countByAccessType(String accessType);
 	
 	
 

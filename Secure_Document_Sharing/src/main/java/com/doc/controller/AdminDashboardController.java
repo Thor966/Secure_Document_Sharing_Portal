@@ -1,6 +1,7 @@
 package com.doc.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.doc.dto.StorageUsageDTO;
 import com.doc.service.IAdminDashboardService;
 
 @RestController
@@ -95,5 +97,78 @@ public class AdminDashboardController
 		
 		return ResponseEntity.ok(onlineCount);
 	}
+	
+	
+	
+	// get the Disabled User count
+	
+	
+
+	// get the daywise expired Document count 
+	@GetMapping("/daywiseExpiredCount")
+	public ResponseEntity<Long> fetchDaywiseExpiredDocCount()
+	{
+		// get the loggedIn Admin
+		
+		// get the service class method
+		Long expiredDocCount = dashboardService.getDaywiseExpiredDocCount();
+		
+		return ResponseEntity.ok(expiredDocCount);
+	}
+	
+	
+	
+	// fetch the access type count
+	@GetMapping("/accessTypeCount")
+	public ResponseEntity<?> fetchAccessTypeCount()
+	{
+		
+		// get the loggedIn Admin
+		
+		// get the service class method
+		Long otpCount = dashboardService.getOtpAccessTypeCount();
+		
+		Long passCount = dashboardService.getPasswordAccessTypeCount();
+		
+		Long publicCount = dashboardService.getPublicAccessTypeCount();
+		
+		// set all these count in the response
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		response.put("otpCount", otpCount);
+		response.put("passCount", passCount);
+		response.put("publicCount", publicCount);
+		
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	// fetch the storage usage
+	@GetMapping("/storageUsage")
+	public ResponseEntity<?> fetchStorageUsage()
+	{
+		// get the loggedIn Admin 
+		
+		
+		// get the service class method
+		Map<String, Object> storageData = dashboardService.getStorateDetails();
+		
+		System.out.println("Storage Used"+ storageData);
+		
+		return ResponseEntity.ok(storageData);
+	}
+	
+	
+	
+	@GetMapping("/storageUsagePerUser")
+	public ResponseEntity<?> getStorageUsagePerUser() {
+		
+		List<StorageUsageDTO> storageUsagePerUser = dashboardService.getStoragePerUser();
+		
+	    return ResponseEntity.ok( storageUsagePerUser);
+	}
+
 
 }

@@ -122,8 +122,8 @@
             	<i class="fa-solid bi bi-files stat-icon text-primary fs-5 mb-2"></i>
                 <h6 class="fw-semibold mb-3">Document Activity Overview</h6>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Documents uploaded today: <strong>84</strong></li>
-                    <li class="list-group-item">Documents expired today: <strong>29</strong></li>
+                    <li class="list-group-item">Documents uploaded today: <strong id="docUploadedToday">84</strong></li>
+                    <li class="list-group-item">Documents expired today: <strong id="expiredCount">29</strong></li>
                     <li class="list-group-item">Force revoked by admin: <strong class="text-warning">6</strong></li>
                 </ul>
             </div>
@@ -134,21 +134,21 @@
                 <div class="col-md-4">
                     <div class="stat-card">
                         <p class="text-muted mb-1">OTP Protected Links</p>
-                        <div class="stat-value" th:text="${otpLinks}">0</div>
+                        <div class="stat-value" id="otpLinks">0</div>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="stat-card">
                         <p class="text-muted mb-1">Password Protected</p>
-                        <div class="stat-value" th:text="${passwordLinks}">0</div>
+                        <div class="stat-value" id="passwordLinks">0</div>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="stat-card">
                         <p class="text-muted mb-1">Public Links</p>
-                        <div class="stat-value" th:text="${publicLinks}">0</div>
+                        <div class="stat-value" id="publicLinks">0</div>
                     </div>
                 </div>
             </div>
@@ -182,27 +182,63 @@
     <div class="row g-4 mb-4">
         <div class="col-md-4">
             <div class="stat-card">
-                <p class="text-muted mb-1">Storage Usage</p>
-                <div class="stat-value">68%</div>
-                <small class="text-muted">1.3 TB used</small>
-            </div>
+                    <p class="text-muted mb-1">Storage Usage</p>
+
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div id="storageProgress" class="progress-bar bg-primary" role="progressbar" style="width: 0%">
+                        </div>
+                    </div>
+
+                    <div class="stat-value">
+                        <span id="storagePercent">0%</span>
+                    </div>
+
+                    <small class="text-muted">
+                        <span id="storageUsed">0</span> GB used of
+                        <span id="storageMax">0</span> GB
+                    </small>
+                </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="stat-card">
-                <p class="text-muted mb-1">Email / OTP Service</p>
-                <div class="stat-value text-success">Operational</div>
-                <small class="text-muted">No failures</small>
-            </div>
-        </div>
+         <div class="col-md-4">
+                <div class="stat-card shadow-sm p-3 rounded">
 
-        <div class="col-md-4">
-            <div class="stat-card">
-                <p class="text-muted mb-1">System Status</p>
-                <div class="stat-value text-success">Healthy</div>
-                <small class="text-muted">All services running</small>
+                    <p class="text-muted mb-1">Email / OTP Service</p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <div id="emailServiceStatus" class="stat-value text-warning">
+                                Checking...
+                            </div>
+
+                            <small id="emailServiceTime" class="text-muted">
+                                Last checked: --
+                            </small>
+                        </div>
+
+                        <span id="emailServiceBadge" class="badge bg-secondary">
+                            --
+                        </span>
+
+                    </div>
+
+                </div>
             </div>
-        </div>
+
+       <div class="col-md-4">
+                <div class="stat-card">
+                    <p class="text-muted mb-1">System Status</p>
+
+                    <div class="stat-value" id="systemStatusText">
+                        Checking...
+                    </div>
+
+                    <small class="text-muted" id="systemStatusSub">
+                        Verifying services
+                    </small>
+                </div>
+            </div>
     </div>
     
     
@@ -217,12 +253,8 @@
                         <th>Storage Used (MB)</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr th:each="row : ${storageUsage}">
-                        <td th:text="${row[0]}">email</td>
-                        <td th:text="${row[1] / 1024 / 1024}">0</td>
-                    </tr>
-                </tbody>
+                <tbody id="storageTableBody"></tbody>
+
             </table>
         </div>
     

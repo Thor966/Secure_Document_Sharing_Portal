@@ -32,6 +32,10 @@ public class SecurityConfig
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 	
+	@Autowired
+	private CustomLoginSuccessHandler customLoginSuccessHandler;
+
+	
 	@Value("${Remember_Me_Key}")
 	private String RememberMeKey;
 	
@@ -65,7 +69,9 @@ public class SecurityConfig
 						"/api/preview/{token}", "/download/{token}","/fetchSecureDoc",
 						"/securityPolicy","/terms","/privacyPolicy","/adminDashboard",
 						"/manageUser","/manageDocument","/manageSecurityLogs","/registerUserCount",
-						"/uploadedDocument","/fetchActiveShares","/onlineUsers",
+						"/uploadedDocument","/fetchActiveShares","/onlineUsers","/daywiseExpiredCount",
+						"/accessTypeCount","/storageUsage","/actuator/**","/storageUsagePerUser",
+						"/fetchManageUserData","/disabledUserCount",
 						
 						
 						
@@ -80,19 +86,22 @@ public class SecurityConfig
 				.anyRequest().authenticated()
 				)
 		
-		.headers(headers -> headers
-	            .frameOptions(frame -> frame.sameOrigin())  // allow iframe
-	        )
+		
+		
 		
 		.formLogin(form -> {
             
             form.loginPage("/login")
             .usernameParameter("username")
             .passwordParameter("password")
-            .defaultSuccessUrl("/postLogin", true)
+            .successHandler(customLoginSuccessHandler)
             .failureUrl("/login?error=true")
             .permitAll();
         })
+		
+		.headers(headers -> headers
+	            .frameOptions(frame -> frame.sameOrigin())  // allow iframe
+	        )
 		
 		.sessionManagement(session -> session
 	            .maximumSessions(-1)  
