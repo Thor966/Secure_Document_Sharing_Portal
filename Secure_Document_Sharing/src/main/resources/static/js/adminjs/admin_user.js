@@ -47,13 +47,61 @@ fetch(CONTEXT_PATH + 'registerUserCount')
 // get the user data
 let permissionCurrentPage = 0;
 	  const permissionPageSize = 10;
+	  
+	  let currentKeyword = "";
+	  let currentStatus = "";
+	  
+	  document.addEventListener("DOMContentLoaded", function () {
+
+	      // Load initial data
+	      loadManageDocuments(0);
+
+	      // Filter form submit
+	      const filterForm = document.getElementById("userFilterForm");
+	      if (filterForm) {
+	          filterForm.addEventListener("submit", function (e) {
+
+	              e.preventDefault();
+
+	              currentKeyword = this.keyword.value.trim();
+	              currentStatus = this.status.value;
+
+	              loadManageDocuments(0);
+	          });
+	      }
+
+	      // Clear button
+	      const clearBtn = document.getElementById("clearFilter");
+	      if (clearBtn) {
+	          clearBtn.addEventListener("click", function () {
+
+	              filterForm.reset();
+	              currentKeyword = "";
+	              currentStatus = "";
+
+	              loadManageDocuments(0);
+	          });
+	      }
+
+	  });
+
+
 
 	  function loadManageDocuments(page = 0) {
 
-	      fetch(`${CONTEXT_PATH}fetchManageUserData?page=${page}&size=${permissionPageSize}`)
+	      let url = `${CONTEXT_PATH}fetchManageUserData?page=${page}&size=${permissionPageSize}`;
+
+	      if (currentKeyword) {
+	          url += `&keyword=${encodeURIComponent(currentKeyword)}`;
+	      }
+
+	      if (currentStatus) {
+	          url += `&status=${encodeURIComponent(currentStatus)}`;
+	      }
+
+	      fetch(url)
 	          .then(res => res.json())
 	          .then(data => {
-				
 
 	              permissionCurrentPage = data.currentPage;
 
@@ -65,7 +113,8 @@ let permissionCurrentPage = 0;
 	              console.error("Error loading Manage Admin User Data:", err)
 	          );
 	  }
-	  
+
+	
 	  
 	  document.addEventListener("DOMContentLoaded", function () {
 	      loadManageDocuments(0);
@@ -105,7 +154,7 @@ let permissionCurrentPage = 0;
 
 			      actionButton = `
 			          <button class="btn btn-sm btn-outline-success"
-			                  onclick="toggleUserStatus(${user.uid}, 'ENABLE')">
+			                  onclick="toggleUserStatus(${user.uid}, 'ACTIVE')">
 			              Enable
 			          </button>
 			      `;

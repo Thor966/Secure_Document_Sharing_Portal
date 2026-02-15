@@ -67,14 +67,14 @@ public class SecurityConfig
 						"/get-username", "/Secure_Document_Sharing/uploads/**", "/uploads/**", 
 						"/fetchDocumentDetails", "/docaccess/{token}", "/docaccess/verify",
 						"/api/preview/{token}", "/download/{token}","/fetchSecureDoc",
-						"/securityPolicy","/terms","/privacyPolicy","/adminDashboard",
+						"/securityPolicy","/terms","/privacyPolicy",
 						"/manageUser","/manageDocument","/manageSecurityLogs","/registerUserCount",
 						"/uploadedDocument","/fetchActiveShares","/onlineUsers","/daywiseExpiredCount",
 						"/accessTypeCount","/storageUsage","/actuator/**","/storageUsagePerUser",
-						"/fetchManageUserData","/disabledUserCount",
+						"/fetchManageUserData","/disabledUserCount","/toggleUserStatus/{uid}",
 						
 						
-						
+						//"/adminDashboard"
 						
 						
 						"/css/**", "/js/**", 

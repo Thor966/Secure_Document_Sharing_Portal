@@ -73,14 +73,175 @@ public class AdminUserManagementService implements IAdminUserManagementService
 	        double mb = bytes / (1024.0 * 1024.0);
 
 	        dto.setStorageUsed(mb);
-	        
-	        System.out.println("Service Debug data: " + dto);
+
 			
 			return dto;
 			
 			
 			
 		});
+	}
+	
+	
+	
+	// filter by both keyword and status
+	@Override
+	public Page<AdminUserManageDTO> filterByKeywordAndStatus(String keyword, String status, Pageable pageable) {
+		
+		// get the filter data
+		Page<User> bothFilterData = userRepo.searchByKeywordAndStatus(keyword, status, pageable);
+		
+		 // Get storage usage in ONE query
+	    List<UserStorageProjection> storageList =
+	            docRepo.getStorageUsageForAllUsers();
+
+	    // Convert list to Map for fast lookup
+	    Map<Long, Long> storageMap = storageList.stream()
+	            .collect(Collectors.toMap(
+	                    UserStorageProjection::getUserId,
+	                    UserStorageProjection::getTotalStorage
+	            ));
+		
+		return bothFilterData.map(filter->{
+			
+			// create the dot object
+			
+			AdminUserManageDTO dto = new AdminUserManageDTO();
+			
+			dto.setUid(filter.getUid());
+			dto.setFirstName(filter.getFirstName());
+			dto.setLastName(filter.getLastName());
+			dto.setEmail(filter.getEmail());
+			dto.setStatus(filter.getStatus());
+			dto.setLastLogin(filter.getLastLogin());
+			dto.setJoinOn(filter.getInsertedOn());
+			// Fetch storage from map
+	        Long bytes = storageMap.getOrDefault(filter.getUid(), 0L);
+
+	        // Convert to MB
+	        double mb = bytes / (1024.0 * 1024.0);
+
+	        dto.setStorageUsed(mb);
+	        
+	        return dto;
+			
+		});
+	}
+	
+	
+	
+	
+	// filter by keyword
+	@Override
+	public Page<AdminUserManageDTO> filterByKeyword(String keyword, Pageable pageable) {
+		
+		
+		// get the filter data
+				Page<User> filterDataByKeyword = userRepo.searchByKeyword(keyword,pageable);
+				
+				 // Get storage usage in ONE query
+			    List<UserStorageProjection> storageList =
+			            docRepo.getStorageUsageForAllUsers();
+
+			    // Convert list to Map for fast lookup
+			    Map<Long, Long> storageMap = storageList.stream()
+			            .collect(Collectors.toMap(
+			                    UserStorageProjection::getUserId,
+			                    UserStorageProjection::getTotalStorage
+			            ));
+				
+				return filterDataByKeyword.map(filter->{
+					
+					// create the dot object
+					
+					AdminUserManageDTO dto = new AdminUserManageDTO();
+					
+					dto.setUid(filter.getUid());
+					dto.setFirstName(filter.getFirstName());
+					dto.setLastName(filter.getLastName());
+					dto.setEmail(filter.getEmail());
+					dto.setStatus(filter.getStatus());
+					dto.setLastLogin(filter.getLastLogin());
+					dto.setJoinOn(filter.getInsertedOn());
+					// Fetch storage from map
+			        Long bytes = storageMap.getOrDefault(filter.getUid(), 0L);
+
+			        // Convert to MB
+			        double mb = bytes / (1024.0 * 1024.0);
+
+			        dto.setStorageUsed(mb);
+			        
+			        return dto;
+					
+				});
+	}
+	
+	
+	
+	
+	
+	// filter by status
+	@Override
+	public Page<AdminUserManageDTO> filterByStatus(String status, Pageable pageable) {
+		
+		// get the filter data
+		Page<User> filterDataByStatus = userRepo.searchByStatus(status,pageable);
+		
+		 // Get storage usage in ONE query
+	    List<UserStorageProjection> storageList =
+	            docRepo.getStorageUsageForAllUsers();
+
+	    // Convert list to Map for fast lookup
+	    Map<Long, Long> storageMap = storageList.stream()
+	            .collect(Collectors.toMap(
+	                    UserStorageProjection::getUserId,
+	                    UserStorageProjection::getTotalStorage
+	            ));
+		
+		return filterDataByStatus.map(filter->{
+			
+			// create the dot object
+			
+			AdminUserManageDTO dto = new AdminUserManageDTO();
+			
+			dto.setUid(filter.getUid());
+			dto.setFirstName(filter.getFirstName());
+			dto.setLastName(filter.getLastName());
+			dto.setEmail(filter.getEmail());
+			dto.setStatus(filter.getStatus());
+			dto.setLastLogin(filter.getLastLogin());
+			dto.setJoinOn(filter.getInsertedOn());
+			// Fetch storage from map
+	        Long bytes = storageMap.getOrDefault(filter.getUid(), 0L);
+
+	        // Convert to MB
+	        double mb = bytes / (1024.0 * 1024.0);
+
+	        dto.setStorageUsed(mb);
+	        
+	        return dto;
+			
+		});
+		
+		
+		
+	}
+	
+	
+	
+	
+	//update the user status
+	@Override
+	public void updateUserStatus(Long uid, String status) {
+		// get the user data first
+		User user = userRepo.findById(uid).orElseThrow(()-> new IllegalAccessError("User Not Found"));
+		
+		//update the user status
+		user.setStatus(status);
+		
+		// save the user status
+		userRepo.save(user);
+		
 	}
 	
 

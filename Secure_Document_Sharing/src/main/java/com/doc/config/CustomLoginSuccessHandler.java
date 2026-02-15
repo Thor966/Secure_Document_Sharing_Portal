@@ -16,37 +16,37 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
-	
-	
-	  @Autowired
-	    private UserRepository userRepo;
 
-		
+    @Autowired
+    private UserRepository userRepo;
 
-	  @Override
-	  public void onAuthenticationSuccess(HttpServletRequest request,
-	                                      HttpServletResponse response,
-	                                      Authentication authentication)
-	          throws IOException {
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication)
+            throws IOException {
 
-	      String email = authentication.getName();
+        String username = authentication.getName();
 
-	      User user = userRepo.findByemail(email).orElseThrow();
+        boolean isAdmin = authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-	      user.setLastLogin(LocalDateTime.now());
-	      userRepo.save(user);
+        if (isAdmin) {
+            response.sendRedirect("/Secure_Document_Sharing/adminDashboard");
+            return;
+        }
 
-	      boolean isAdmin = authentication.getAuthorities()
-	              .stream()
-	              .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+        // If not admin → must be USER
+        User user = userRepo.findByAuth_Username(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-	      if (isAdmin) {
-	          response.sendRedirect("/Secure_Document_Sharing/adminDashboard");
-	      } else {
-	          response.sendRedirect("/Secure_Document_Sharing/dashboard");
-	      }
-	  }
+        user.setLastLogin(LocalDateTime.now());
+        userRepo.save(user);
 
-	}
+        response.sendRedirect("/Secure_Document_Sharing/dashboard");
+    }
+}
+
 
 

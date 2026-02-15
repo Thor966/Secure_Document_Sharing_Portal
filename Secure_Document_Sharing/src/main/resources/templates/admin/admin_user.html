@@ -51,7 +51,7 @@
     
     
     <!-- Search Bar -->
-        <form method="get" class="row g-2 mb-3">
+        <form id="userFilterForm"  class="row g-2 mb-3">
             <div class="col-md-4">
                 <input type="text" name="keyword" class="form-control" placeholder="Search by name or email">
             </div>
@@ -61,15 +61,24 @@
                     <option value="">All Status</option>
                     <option value="ACTIVE">Active</option>
                     <option value="DISABLED">Disabled</option>
-                    <option value="LOCKED">Locked</option>
                 </select>
             </div>
 
-            <div class="col-md-2">
-                <button class="btn btn-primary w-100">
-                    Search
-                </button>
-            </div>
+
+
+           <div class="col-md-3 d-flex gap-2">
+   			 <button type="submit" class="bi bi-search btn btn-primary w-50">
+       			 Search
+    		 </button>
+
+   			 <button type="button"
+           		 class="bi bi-x btn btn-secondary w-50"
+           		 id="clearFilter">
+       			 Clear
+    			</button>
+			</div>
+            
+			
         </form>
 
 
