@@ -42,30 +42,7 @@ public class AdminUserManagementController
 	}
 	
 	
-	// fetch all user Data
-//	@GetMapping("/fetchManageUserData")
-//	public ResponseEntity<?> fetchAllUserData(@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
-//	{
-//		// get the logged In Admin
-//		
-//		
-//		// get the service class method
-//		
-//		Page<AdminUserManageDTO> userData = adminUserService.getAllUsersData(pageable);
-//		
-//		
-//		Map<String, Object> response = new HashMap<>();
-//		response.put("content", userData.getContent());
-//	    response.put("currentPage", userData.getNumber());
-//	    response.put("pageSize", userData.getSize());
-//	    response.put("totalElements", userData.getTotalElements());
-//	    response.put("totalPages", userData.getTotalPages());
-//	    response.put("first", userData.isFirst());
-//	    response.put("last", userData.isLast());
-//		
-//		return ResponseEntity.ok(response);
-//		
-//	}
+
 	
 	
 	

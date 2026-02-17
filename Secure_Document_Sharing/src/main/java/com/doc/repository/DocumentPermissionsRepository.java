@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.doc.entity.DocumentPermissions;
 import com.doc.entity.ManageAction;
@@ -38,6 +40,26 @@ public interface DocumentPermissionsRepository extends JpaRepository<DocumentPer
 	// get the otp access type count
 	public Long countByAccessType(String accessType);
 	
+	
+	
+	// filter by email and status
+	@Query("""
+		    SELECT dp FROM DocumentPermissions dp
+		    WHERE (:email IS NULL OR LOWER(dp.documentId.owner.email) LIKE LOWER(CONCAT('%', :email, '%')))
+		    AND(:status IS NULL OR LOWER(dp.status) LIKE LOWER(CONCAT('%', :status, '%')))
+			""")
+			Page<DocumentPermissions> searchByKeywordAndStatus(@Param("email") String email,
+													@Param("status") String status, Pageable pageable);
+	
+	
+	// filter by email
+	@Query("SELECT dp FROM DocumentPermissions dp WHERE (:email IS NULL OR LOWER(dp.documentId.owner.email) LIKE LOWER(CONCAT('%', :email, '%')))")
+	Page<DocumentPermissions> searchByKeywords(@Param("email") String email, Pageable pageable);
+	
+	
+	// filter by status
+	@Query("SELECT dp FROM DocumentPermissions dp WHERE (:status IS NULL OR LOWER(dp.status) LIKE LOWER(CONCAT('%', :status, '%')))")
+	Page<DocumentPermissions> searchByStatus(@Param("status") String status, Pageable pageable);
 	
 
 

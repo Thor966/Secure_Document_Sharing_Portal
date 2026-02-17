@@ -45,17 +45,17 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
-        .badge-active {
+        .badge-otp {
             background: #dcfce7;
-            color: #166534;
+            color: #0d6efd;
         }
 
-        .badge-expired {
+        .badge-pass {
             background: #e5e7eb;
-            color: #374151;
+            color: #7c3aed;
         }
 
-        .badge-revoked {
+        .badge-public {
             background: #fee2e2;
-            color: #991b1b;
+            color: #6c757d;
         }
