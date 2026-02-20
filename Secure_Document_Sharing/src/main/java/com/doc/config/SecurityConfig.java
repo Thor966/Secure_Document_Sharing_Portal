@@ -72,7 +72,8 @@ public class SecurityConfig
 						"/uploadedDocument","/fetchActiveShares","/onlineUsers","/daywiseExpiredCount",
 						"/accessTypeCount","/storageUsage","/actuator/**","/storageUsagePerUser",
 						"/fetchManageUserData","/disabledUserCount","/toggleUserStatus/{uid}",
-						"/fetchAdminManageDocData",
+						"/fetchAdminManageDocData","/documentStats","/forceRevoke/{dpid}",
+						"/globalAuditLogs",
 						
 						
 						//"/adminDashboard"

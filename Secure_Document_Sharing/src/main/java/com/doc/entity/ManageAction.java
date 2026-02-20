@@ -11,6 +11,10 @@ public enum ManageAction
 	VIEW,
 	OTP,
 	PASSWORD,
+	LOGIN,
+	FORCE_REVOKE,
+	USER_DISABLED,
+	USER_ENABLED,
 	ADMIN_REQUEST
 
 }

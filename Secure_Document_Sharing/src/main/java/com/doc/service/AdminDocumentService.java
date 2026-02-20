@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.doc.dto.AdminDocumentManageDTO;
 import com.doc.entity.DocumentPermissions;
+import com.doc.entity.ManageAction;
+import com.doc.entity.ManageStatus;
 import com.doc.entity.User;
 import com.doc.repository.DocumentPermissionsRepository;
 import com.doc.repository.DocumentsRepository;
+import com.doc.repository.UserRepository;
 
 
 @Service
@@ -21,6 +24,43 @@ public class AdminDocumentService implements IAdminDocumentService
 	
 	@Autowired
 	private DocumentsRepository docRepo;
+	
+	@Autowired
+	private IAuditLogsService logService;
+
+	
+	
+	// get total shared doc count
+		@Override
+		public Long getTotalSharedDocCount() {
+			
+			return permissionRepo.count();
+		}
+	
+	// get the total active doc count
+	@Override
+	public Long getTotalActiveDocCount() {
+		
+		return permissionRepo.countByStatus("ACTIVE");
+	}
+	
+	
+	// get the total Expired Document
+	@Override
+	public Long getTotalExpiredDocumentCount() {
+		
+		return permissionRepo.countByStatus("EXPIRED");
+	}
+	
+	
+	// get the total revoked doc count
+	@Override
+	public Long getTotalRevokeDocumentCount() {
+		return permissionRepo.countByStatus("REVOKE");
+	}
+	
+	
+	
 	
 	
 	// get all documents Data
@@ -195,6 +235,32 @@ public class AdminDocumentService implements IAdminDocumentService
 		});
 	}
 	
+	
+	
+	// user force revoke
+	@Override
+	public void forceRevokeDoc(Long dpid, String action) {
+		
+		// first get the user object
+		DocumentPermissions perm = permissionRepo.findById(dpid).orElseThrow(()-> new IllegalArgumentException("User Not found"));
+		
+		// set the status
+		perm.setStatus(action);
+		perm.setSecureToken(null);
+		perm.setDpEncryptedKey(null);
+		
+		
+		perm.setDocOtp(null);
+		
+		perm.setDocPass(null);
+		
+		
+		logService.logAction(perm.getGrantedBy().getUid(), perm.getDocumentId().getDocid(), dpid, ManageAction.FORCE_REVOKE, ManageStatus.ADMIN);
+		
+		// save the doc permission status
+		permissionRepo.save(perm);
+		
+	}
 	
 	
 	

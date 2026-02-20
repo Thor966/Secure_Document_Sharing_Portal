@@ -9,14 +9,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.doc.dto.AdminDTO;
 import com.doc.dto.AdminUserManageDTO;
-import com.doc.entity.User;
+import com.doc.dto.UserDTO;
+import com.doc.service.IAdminDashboardService;
 import com.doc.service.IAdminUserManagementService;
 
 @RestController
@@ -27,13 +31,29 @@ public class AdminUserManagementController
 	@Autowired
 	private IAdminUserManagementService adminUserService;
 	
+	@Autowired
+	private IAdminDashboardService dashboardService;
+	
+	
+	
+	// get the logged in user
+	public AdminDTO getLoggedInAdmin()
+	{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		
+		AdminDTO admin =  dashboardService.getAdminByUsername(username);
+		
+		return admin;
+	}
 	
 	
 	// get disabled user count
 	@GetMapping("/disabledUserCount")
 	public ResponseEntity<Long> fetchDisabledUserCount()
 	{
-		// get loggedIn user
+		// get loggedIn Admin
+		AdminDTO admin = getLoggedInAdmin();
 		
 		// get service class method
 		Long disableUserCount = adminUserService.getDisabledUserCount();
@@ -53,7 +73,8 @@ public class AdminUserManagementController
 											@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
 	{
 		
-		// get the logged in Admin
+		// get loggedIn Admin
+		AdminDTO admin = getLoggedInAdmin();
 		
 		
 		Page<AdminUserManageDTO> userPage;
@@ -105,13 +126,13 @@ public class AdminUserManagementController
 	}
 	
 	
-	// update the user status
+	// disable the user status
 	@PostMapping("/toggleUserStatus/{uid}")
 	public ResponseEntity<?> updateUserStatus(@PathVariable("uid") Long uid, @RequestParam("action") String action)
 	{
 		
 		// get the logged In Admin
-		
+		AdminDTO admin = getLoggedInAdmin();
 		
 		// get the service class method
 		
@@ -119,13 +140,13 @@ public class AdminUserManagementController
 		{
 			adminUserService.updateUserStatus(uid, action);
 			
-			return ResponseEntity.ok("User Status updated Successfully");
+			return ResponseEntity.ok("User Disabled Successfully");
 		}
 		catch(Exception e)
 		{
 			  return ResponseEntity
 		                .badRequest()
-		                .body("Failed to update user status");
+		                .body("Failed to disabled user");
 			
 		}
 	}

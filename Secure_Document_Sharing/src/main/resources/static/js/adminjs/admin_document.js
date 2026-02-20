@@ -1,5 +1,27 @@
 
 
+// get the document stats
+fetch(CONTEXT_PATH + 'documentStats')
+								            .then(res => {
+								                if (!res.ok) throw new Error("Not logged in");
+								                return res.json();
+								            })
+								            .then(response => {
+								                document.getElementById("totalDocs").innerText = response.docCount;
+								                document.getElementById("activeDocs").innerText = response.activeDocCount;
+								                document.getElementById("expiredDocs").innerText = response.expiredDocCount;
+								                document.getElementById("revokedDocs").innerText = response.revokedDocCount;
+								            })
+								            .catch(err => console.error(err));
+											
+
+
+
+
+
+
+
+
 // get the user data
 let permissionCurrentPage = 0;
 	  const permissionPageSize = 10;
@@ -110,19 +132,11 @@ let permissionCurrentPage = 0;
 
 			      actionButton = `
 			          <button class="btn btn-sm btn-outline-danger"
-			                  onclick="toggleUserStatus(${doc.dpid}, 'REVOKE')">
+			                  onclick="toggleDocStatus(${doc.dpid}, 'REVOKE')">
 			              Force Revoke
 			          </button>
 			      `;
 
-			  } else if (doc.status === "REVOKE") {
-
-			      actionButton = `
-			          <button class="btn btn-sm btn-outline-success"
-			                  onclick="toggleUserStatus(${doc.dpid}, 'ACTIVE')">
-			              Activate
-			          </button>
-			      `;
 			  }
 
 			  
@@ -236,16 +250,16 @@ let permissionCurrentPage = 0;
 	  
 	  
 	  // toggle function
-	  function toggleUserStatus(dpid, action) {
+	  function toggleDocStatus(dpid, action) {
 
 	      console.log("DPID:", dpid);
 	      console.log("Action:", action);
 
-	      if (!confirm(`Are you sure you want to ${action.toLowerCase()} this user?`)) {
+	      if (!confirm(`Are you sure you want to ${action.toLowerCase()} this Document?`)) {
 	          return;
 	      }
 
-	      fetch(`${CONTEXT_PATH}toggleUserStatus/${dpid}?action=${action}`, {
+	      fetch(`${CONTEXT_PATH}forceRevoke/${dpid}?action=${action}`, {
 	          method: "POST"
 	      })
 	      .then(res => {
@@ -257,6 +271,6 @@ let permissionCurrentPage = 0;
 	      })
 	      .catch(err => {
 	          console.error("Toggle error:", err);
-	          alert("Error updating user status");
+	          alert("Error updating Document status");
 	      });
 	  }

@@ -17,8 +17,8 @@ function refreshDashboard() {
 		const CONTEXT_PATH = /*[[@{/}]]*/ '';
 		
 		
-		// fetch the total Registred User and daywise register user
-		fetch(CONTEXT_PATH + 'registerUserCount')
+		// fetch the total User stats
+		fetch(CONTEXT_PATH + 'adminDashboardUserStats')
 								            .then(res => {
 								                if (!res.ok) throw new Error("Not logged in");
 								                return res.json();
@@ -27,6 +27,8 @@ function refreshDashboard() {
 								                document.getElementById("totalRegisterUserCount").innerText = response.userCount;
 								                document.getElementById("totalDaywiseUserCount").innerText = response.todaysUserCount;
 								                document.getElementById("todaysRegisterUser").innerText = response.todaysUserCount;
+								                document.getElementById("activeUsers").innerText = response.onlineCount;
+								                document.getElementById("disabledUser").innerText = response.disableUserCount;
 								            })
 								            .catch(err => console.error(err));
 											
@@ -34,7 +36,7 @@ function refreshDashboard() {
 											
 											
 		// fetch the total uploaded documents and daywise uploaded doc count
-		fetch(CONTEXT_PATH + 'uploadedDocument')
+		fetch(CONTEXT_PATH + 'adminDashboardDocStats')
 										            .then(res => {
 										                if (!res.ok) throw new Error("Not logged in");
 										                return res.json();
@@ -43,67 +45,25 @@ function refreshDashboard() {
 										                document.getElementById("totalUploadedDocCount").innerText = response.uploadedDocCount;
 										                document.getElementById("totalDaywiseDocCount").innerText = response.daywiseCount;
 										                document.getElementById("docUploadedToday").innerText = response.daywiseCount;
+										                document.getElementById("expiredCount").innerText = response.expiredDocCount;
+										                document.getElementById("forceRevoke").innerText = response.forceRevokeDocCount;
 										            })
 										            .catch(err => console.error(err));
 													
 										
 													
-													
-		// fetch active shares
-		fetch(CONTEXT_PATH + 'fetchActiveShares')
-												            .then(res => {
-												                if (!res.ok) throw new Error("Not logged in");
-												                return res.json();
-												            })
-												            .then(activeSharesCount => {
-												                document.getElementById("totalActiveShares").innerText = activeSharesCount;
-												                
-												            })
-												            .catch(err => console.error(err));
-					
-													
-				
-			// fetch the total active users 
-			function loadOnlineUsers() {
-
-			    fetch('onlineUsers')
-			        .then(res => res.json())
-			        .then(count => {
-			            document.getElementById("activeUsers").innerText = count;
-			        });
-			}
-
-			// Refresh every 10 seconds
-			setInterval(loadOnlineUsers, 60000);
-
-			document.addEventListener("DOMContentLoaded", loadOnlineUsers);
-			
-			
-			
-			
-			// get the daywise expired document count
-			fetch(CONTEXT_PATH + 'daywiseExpiredCount')
-													            .then(res => {
-													                if (!res.ok) throw new Error("Not logged in");
-													                return res.json();
-													            })
-													            .then(expiredDocCount => {
-													                document.getElementById("expiredCount").innerText = expiredDocCount;
-													                
-													            })
-													            .catch(err => console.error(err));
-			
+																															
 																
 																
 																
-																
-			// get the access type count
-			fetch(CONTEXT_PATH + 'accessTypeCount')
+			// get the Share Stats
+			fetch(CONTEXT_PATH + 'adminSharesStats')
 																            .then(res => {
 																                if (!res.ok) throw new Error("Not logged in");
 																                return res.json();
 																            })
 																            .then(response => {
+																				document.getElementById("totalActiveShares").innerText = response.activeSharesCount;
 																                document.getElementById("otpLinks").innerText = response.otpCount;
 																                document.getElementById("passwordLinks").innerText = response.passCount;
 																                document.getElementById("publicLinks").innerText = response.publicCount;

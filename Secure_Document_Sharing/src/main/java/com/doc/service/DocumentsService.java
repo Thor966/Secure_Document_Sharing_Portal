@@ -27,6 +27,7 @@ import com.doc.dto.UserDTO;
 import com.doc.entity.DocumentPermissions;
 import com.doc.entity.Documents;
 import com.doc.entity.ManageAction;
+import com.doc.entity.ManageStatus;
 import com.doc.entity.User;
 import com.doc.repository.DocumentPermissionsRepository;
 import com.doc.repository.DocumentsRepository;
@@ -120,7 +121,7 @@ public class DocumentsService implements IDocumentsService
 		
 
 		// save the audit logs 
-		auditService.logAction(owner.getUid(), doc.getDocid(), null, ManageAction.UPLOAD);
+		auditService.logAction(owner.getUid(), doc.getDocid(), null, ManageAction.UPLOAD, ManageStatus.SUCCESS);
 		
 		
 		return document;
@@ -251,7 +252,7 @@ public class DocumentsService implements IDocumentsService
 	    DocumentPermissions permission = docPermission.save(perm);
 	    
 	    // set the audit logs
-	    auditService.logAction(grantedBy.getUid(), docid, null, ManageAction.SHARE);
+	    auditService.logAction(grantedBy.getUid(), docid, null, ManageAction.SHARE, ManageStatus.SUCCESS);
 		
 		
 		return permission;
@@ -324,7 +325,7 @@ public class DocumentsService implements IDocumentsService
 			            dp.setStatus("EXPIRED");
 			            
 			            // set the audit logs
-					    auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.EXPIRED);
+					    auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.EXPIRED, ManageStatus.EXPIRED);
 					    
 			            docPermission.save(dp);  
 			        }
@@ -355,6 +356,7 @@ public class DocumentsService implements IDocumentsService
 		
 		// set the Encryption Key as null
 		dp.setDpEncryptedKey(null);
+		dp.setSecureToken(null);
 		
 		// set the opt and password as null
 	
@@ -367,7 +369,7 @@ public class DocumentsService implements IDocumentsService
 		DocumentPermissions permission = docPermission.save(dp);
 			
 		// set the audit logs
-		auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dpid, ManageAction.REVOKE);
+		auditService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dpid, ManageAction.REVOKE, ManageStatus.FAILED);
 		
 		return permission;
 	}

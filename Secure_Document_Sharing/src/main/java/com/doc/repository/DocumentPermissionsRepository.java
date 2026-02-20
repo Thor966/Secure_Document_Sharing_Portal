@@ -34,6 +34,7 @@ public interface DocumentPermissionsRepository extends JpaRepository<DocumentPer
 	// get the total active shared Document
 	public Long countByStatus(String status);
 	
+	
 	// get the daywise expired doc count
 	public Long countByInsertedOnBetweenAndStatus(LocalDateTime start, LocalDateTime end, String status);
 	

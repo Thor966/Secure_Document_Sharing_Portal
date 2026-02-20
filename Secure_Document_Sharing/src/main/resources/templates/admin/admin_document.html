@@ -5,10 +5,13 @@
     <title>Document Management | SecureDocs Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
+     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <link th:href="@{/css/admincss/admin_document.css}" rel="stylesheet">
 </head>
@@ -37,7 +40,7 @@
         <i class="fa-solid fa-folder-open me-2"></i> Documents
     </a>
     <a th:href="@{/manageSecurityLogs}">
-        <i class="fa-solid fa-shield-check me-2"></i> Security Logs
+        <i class="fa-solid bi bi-shield-fill-check me-2"></i> Security Logs
     </a>
 </div>
 
@@ -85,28 +88,28 @@
             <div class="col-md-3">
                 <div class="table-card text-center">
                     <h6>Total Documents</h6>
-                    <h5 th:text="${totalDocs}">0</h5>
+                    <h5 id="totalDocs">0</h5>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="table-card text-center">
                     <h6>Active</h6>
-                    <h5 class="text-success" th:text="${activeDocs}">0</h5>
+                    <h5 class="text-success" id="activeDocs">0</h5>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="table-card text-center">
                     <h6>Expired</h6>
-                    <h5 class="text-secondary" th:text="${expiredDocs}">0</h5>
+                    <h5 class="text-secondary" id="expiredDocs">0</h5>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="table-card text-center">
                     <h6>Revoked</h6>
-                    <h5 class="text-danger" th:text="${revokedDocs}">0</h5>
+                    <h5 class="text-danger" id="revokedDocs">0</h5>
                 </div>
             </div>
         </div>

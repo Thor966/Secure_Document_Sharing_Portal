@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.doc.dto.AdminUserManageDTO;
 import com.doc.dto.UserStorageProjection;
+import com.doc.entity.ManageAction;
+import com.doc.entity.ManageStatus;
 import com.doc.entity.User;
 import com.doc.repository.DocumentsRepository;
 import com.doc.repository.UserRepository;
@@ -23,6 +25,9 @@ public class AdminUserManagementService implements IAdminUserManagementService
 	
 	@Autowired
 	private DocumentsRepository docRepo;
+	
+	@Autowired
+	private IAuditLogsService logService;
 	
 	
 	
@@ -236,8 +241,18 @@ public class AdminUserManagementService implements IAdminUserManagementService
 		// get the user data first
 		User user = userRepo.findById(uid).orElseThrow(()-> new IllegalAccessError("User Not Found"));
 		
-		//update the user status
-		user.setStatus(status);
+		// status variable
+		ManageAction action = null;
+		
+		if ("DISABLED".equalsIgnoreCase(status)) {
+			action = ManageAction.USER_DISABLED;
+	        user.setStatus("DISABLED");
+	    } else if ("ACTIVE".equalsIgnoreCase(status)) {
+	    	action = ManageAction.USER_ENABLED;
+	        user.setStatus("ACTIVE");
+	    }
+		
+		logService.logAction(uid, null, null, action, ManageStatus.ADMIN);
 		
 		// save the user status
 		userRepo.save(user);

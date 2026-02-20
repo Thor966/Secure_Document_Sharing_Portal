@@ -1,28 +1,19 @@
 
 
 // get the total users
-fetch(CONTEXT_PATH + 'registerUserCount')
+fetch(CONTEXT_PATH + 'adminDashboardUserStats')
 								            .then(res => {
 								                if (!res.ok) throw new Error("Not logged in");
 								                return res.json();
 								            })
 								            .then(response => {
 								                document.getElementById("totalUserCount").innerText = response.userCount;
+												document.getElementById("manageActiveUsers").innerText = response.onlineCount;
+												document.getElementById("disabledUsers").innerText = response.disableUserCount;
 								            })
 								            .catch(err => console.error(err));
 											
 											
-											
-	// get the active users 	
-			fetch(CONTEXT_PATH + 'onlineUsers')
-													            .then(res => {
-													                if (!res.ok) throw new Error("Not logged in");
-													                return res.json();
-													            })
-													            .then(count => {
-													                document.getElementById("manageActiveUsers").innerText = count;
-													            })
-													            .catch(err => console.error(err));
 																
 																
 																
@@ -35,7 +26,7 @@ fetch(CONTEXT_PATH + 'registerUserCount')
 									                return res.json();
 									            })
 									            .then(userCount => {
-									                document.getElementById("disabledUsers").innerText = userCount;
+									                
 									            })
 									            .catch(err => console.error(err));
 				
@@ -265,7 +256,7 @@ let permissionCurrentPage = 0;
 	          method: "POST"
 	      })
 	      .then(res => {
-	          if (!res.ok) throw new Error("Failed to update status");
+	          if (!res.ok) throw new Error("Failed to disable User");
 	          return res.text();
 	      })
 	      .then(() => {
@@ -273,7 +264,7 @@ let permissionCurrentPage = 0;
 	      })
 	      .catch(err => {
 	          console.error("Toggle error:", err);
-	          alert("Error updating user status");
+	          alert("Error Disabling User");
 	      });
 	  }
 

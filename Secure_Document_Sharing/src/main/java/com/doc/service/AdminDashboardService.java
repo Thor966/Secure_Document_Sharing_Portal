@@ -5,12 +5,16 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 
+import com.doc.dto.AdminDTO;
 import com.doc.dto.StorageUsageDTO;
+import com.doc.entity.Admin;
+import com.doc.repository.AdminRepository;
 import com.doc.repository.DocumentPermissionsRepository;
 import com.doc.repository.DocumentsRepository;
 import com.doc.repository.UserRepository;
@@ -19,6 +23,8 @@ import com.doc.repository.UserRepository;
 public class AdminDashboardService implements IAdminDashboardService
 {
 	
+	@Autowired
+	private AdminRepository adminRepo;
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -34,12 +40,32 @@ public class AdminDashboardService implements IAdminDashboardService
 	
 	
 	
+	// get admin by username
+	public AdminDTO getAdminByUsername(String username)
+	{
+		Admin admin = adminRepo.findByUsername(username).orElseThrow(()-> new IllegalAccessError("Admin Not Found"));
+		
+		// copy the admin to dto
+		AdminDTO dto = new AdminDTO();
+		
+		dto.setAid(admin.getAid());
+		dto.setUsername(admin.getUsername());
+		dto.setName(admin.getName());
+		dto.setEmail(admin.getEmail());
+		dto.setPassword(admin.getPassword());
+		
+		return dto;
+	}
+	
+	
 	// get the total register user count
 	@Override
 	public Long getTotalUsersCount() {
 		
 		return userRepo.count();
 	}
+	
+	
 	
 	
 	// get the today(daywise) register user
@@ -101,6 +127,14 @@ public class AdminDashboardService implements IAdminDashboardService
 	
 	
 	// get the Disbled User Count
+	@Override
+	public Long getDisabledUserCount() {
+		
+		return userRepo.countByStatus("DISABLED");
+	}
+	
+	
+	
 	
 	
 	// get the daywise Expired doc count
@@ -111,6 +145,15 @@ public class AdminDashboardService implements IAdminDashboardService
 		LocalDateTime endOf = startOf.plusDays(1);
 		
 		return permissionRepo.countByInsertedOnBetweenAndStatus(startOf, endOf, "EXPIRED");
+	}
+	
+	
+	
+	// get force revoke doc count
+	@Override
+	public Long getForceRevokeCount() {
+		
+		return permissionRepo.countByStatus("REVOKE");
 	}
 	
 	
@@ -143,7 +186,9 @@ public class AdminDashboardService implements IAdminDashboardService
 	public Map<String, Object> getStorateDetails() {
 		
 		// get the used storage in bytes
-		Long usedBytes = docRepo.getTotalStoraeUsed();
+//		Long usedBytes = docRepo.getTotalStoraeUsed();
+		Long usedBytes = Optional.ofNullable(docRepo.getTotalStoraeUsed()).orElse(0L);
+
 		
 		// get the system limit storage
 		Long maxStorageBytes = 10L * 1024 * 1024 * 1024;

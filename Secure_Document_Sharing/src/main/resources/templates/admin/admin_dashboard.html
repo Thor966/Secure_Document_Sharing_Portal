@@ -39,7 +39,7 @@
         <i class="fa-solid fa-folder-open me-2"></i> Documents
     </a>
     <a th:href="@{/manageSecurityLogs}">
-        <i class="fa-solid fa-shield-check me-2"></i> Security Logs
+        <i class="fa-solid bi bi-shield-fill-check me-2"></i> Security Logs
     </a>
 </div>
 
@@ -112,7 +112,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">New registrations today: <strong id="todaysRegisterUser">18</strong></li>
                     <li class="list-group-item">Active users (24h): <strong id="activeUsers">980</strong></li>
-                    <li class="list-group-item">Disabled users: <strong class="text-danger">14</strong></li>
+                    <li class="list-group-item">Disabled users: <strong class="text-danger" id="disabledUser">14</strong></li>
                 </ul>
             </div>
         </div>
@@ -124,7 +124,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Documents uploaded today: <strong id="docUploadedToday">84</strong></li>
                     <li class="list-group-item">Documents expired today: <strong id="expiredCount">29</strong></li>
-                    <li class="list-group-item">Force revoked by admin: <strong class="text-warning">6</strong></li>
+                    <li class="list-group-item">Force revoked by admin: <strong class="text-warning" id="forceRevoke">6</strong></li>
                 </ul>
             </div>
         </div>

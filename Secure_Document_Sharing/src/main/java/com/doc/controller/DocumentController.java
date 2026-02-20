@@ -34,6 +34,7 @@ import com.doc.dto.DocumentsDTO;
 import com.doc.dto.UserDTO;
 import com.doc.entity.DocumentPermissions;
 import com.doc.entity.ManageAction;
+import com.doc.entity.ManageStatus;
 import com.doc.entity.User;
 import com.doc.repository.DocumentPermissionsRepository;
 import com.doc.repository.UserRepository;
@@ -300,23 +301,26 @@ public class DocumentController
 		// get the document by token
 		DocumentPermissions dp =  docService.accessDocByLink(token);
 		
-		
+		ManageStatus status = null;
 		
 		//  Status check
 	    if (!dp.getStatus().equals("ACTIVE")) {
+	    	status = ManageStatus.FAILED;
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN)
 	                .body(Map.of("error", "This link is no longer active"));
 	    }
 
 	    //  Expiry check
 	    if (dp.getExpiryTime() != null && dp.getExpiryTime().isBefore(LocalDateTime.now())) {
-
+	    	status = ManageStatus.EXPIRED;
 	        dp.setStatus("EXPIRED");
 	        docPermission.save(dp);
 
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN)
 	                .body(Map.of("error", "This link has expired"));
 	    }
+	    
+	    
 
 	    //  Response based on access type
 	    Map<String, Object> response = new HashMap<>();
@@ -324,6 +328,7 @@ public class DocumentController
 	    response.put("accessType", dp.getAccessType());
 	    response.put("token", token);
 	    
+	    status = ManageStatus.ALLOW;
 	    
 	    if (dp.getAccessType().equals("NO ACCESS")) {
 	        response.put("next", "/Secure_Document_Sharing/document-preview?token=" + token);
@@ -364,15 +369,22 @@ public class DocumentController
 	    //  OTP verification
 	    if (dp.getAccessType().equals("OTP")) {
 	    	
+	    	// status variable
+	    	ManageStatus status = null;
+	    	
 	    	// check OTP verification
 	        if (!value.equals(String.valueOf(dp.getDocOtp()))) {
+	        	
+	        	// status variable
+	        	status = ManageStatus.FAILED;
+	        	
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 	                    .body(Map.of("error", "Invalid OTP"));
 	        }
 	        
 	        
 	        // set the audit logs for OTP
-	        logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.OTP);
+	        logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.OTP, status);
 	    }
 
 	    
@@ -380,15 +392,21 @@ public class DocumentController
 	    // Password verification
 	    if (dp.getAccessType().equals("PASSWORD")) {
 	    	
+	    	// status variable
+	    	ManageStatus status = null;
+	    	
 	    	// check password validity
 	        if (!value.equals(dp.getDocPass())) {
+	        	
+	        	status = ManageStatus.FAILED;
+	        	
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 	                    .body(Map.of("error", "Invalid password"));
 	        }
 	        
 	        
 	        // set the audit logs for PASSWORD
-	        logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.PASSWORD);
+	        logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.PASSWORD, status);
 	    }
 
 	    //  Verified → redirect to preview page
@@ -409,16 +427,23 @@ public class DocumentController
 
 		// get the service class method
 	    DocumentPermissions dp = docService.accessDocByLink(token);
-
+	    
+	    // set status variable
+	    	ManageStatus status = null;
+	    
 	    if (!"ACTIVE".equals(dp.getStatus())) {
+	    	status = ManageStatus.FAILED;
 	        throw new RuntimeException("Access revoked");
 	    }
 
 	    if (dp.getExpiryTime() != null && dp.getExpiryTime().isBefore(LocalDateTime.now())) {
+	    	status = ManageStatus.EXPIRED;
 	        dp.setStatus("EXPIRED");
 	        docPermission.save(dp);
 	        throw new RuntimeException("Link expired");
 	    }
+	    
+	    status = ManageStatus.SUCCESS;
 
 	    //  Response based on access type
 	    Map<String, Object> response = new HashMap<>();
@@ -429,7 +454,7 @@ public class DocumentController
 	  
 	    
 	    //set the audit logs for view
-	    logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.VIEW);
+	    logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.VIEW, status);
 
 	    return ResponseEntity.ok(response);
 	}
@@ -443,6 +468,9 @@ public class DocumentController
 	{
 	    // Get permission by token
 	    DocumentPermissions dp = docService.accessDocByLink(token);
+	    
+	    // status variable
+	    ManageStatus status = null;
 
 	    if (dp == null) {
 	        return ResponseEntity.notFound().build();
@@ -450,6 +478,7 @@ public class DocumentController
 
 	    // Check status
 	    if (!"ACTIVE".equals(dp.getStatus())) {
+	    	status = ManageStatus.FAILED;
 	        throw new RuntimeException("Access revoked");
 	    }
 
@@ -457,11 +486,14 @@ public class DocumentController
 	    if (dp.getExpiryTime() != null &&
 	        dp.getExpiryTime().isBefore(LocalDateTime.now())) {
 
+	    	status = ManageStatus.EXPIRED;
+	    			
 	        dp.setStatus("EXPIRED");
 	        docPermission.save(dp);
 	        throw new RuntimeException("Link expired");
 	    }
 
+	    
 
 	    String storedName = dp.getDocumentId().getStoredName();
 
@@ -475,9 +507,10 @@ public class DocumentController
 
 	    String fileName = file.getFileName().toString();
 	    
+	    status = ManageStatus.SUCCESS;
 	    
 	    //set the audit logs for view
-	    logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.DOWNLOAD);
+	    logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.DOWNLOAD, status);
 
 	    return ResponseEntity.ok()
 	            .header(HttpHeaders.CONTENT_DISPOSITION,

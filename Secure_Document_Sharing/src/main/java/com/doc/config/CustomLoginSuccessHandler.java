@@ -28,24 +28,23 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         String username = authentication.getName();
 
+        
+        userRepo.findByemail(username).ifPresent(user -> {
+            user.setLastLogin(LocalDateTime.now());
+            userRepo.save(user);
+        });
+
         boolean isAdmin = authentication.getAuthorities()
                 .stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
 
         if (isAdmin) {
-            response.sendRedirect("/Secure_Document_Sharing/adminDashboard");
-            return;
+            response.sendRedirect(request.getContextPath() + "/adminDashboard");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/dashboard");
         }
-
-        // If not admin → must be USER
-        User user = userRepo.findByAuth_Username(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setLastLogin(LocalDateTime.now());
-        userRepo.save(user);
-
-        response.sendRedirect("/Secure_Document_Sharing/dashboard");
     }
+
 }
 
 

@@ -34,11 +34,11 @@ public class AuditLogs implements Serializable
 	private Long auditId;
 	
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name="user_id", nullable = true)
 	private User user;
 	
 	@ManyToOne
-	@JoinColumn(name="document_id")
+	@JoinColumn(name="document_id", nullable = true)
 	private Documents document;
 	
 	@ManyToOne
@@ -47,6 +47,9 @@ public class AuditLogs implements Serializable
 	
 	@Enumerated(EnumType.STRING)
 	private ManageAction action;
+	
+	@Enumerated(EnumType.STRING)
+	private ManageStatus status;
 
 	
 	
