@@ -19,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,6 +76,7 @@ public class DocumentController
 	
 	
 	 // get the loggedin user
+	 @PreAuthorize("hasAuthority('USER')")
 	public UserDTO getLoggedInUser()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -88,6 +90,7 @@ public class DocumentController
 	// upload the documents
 	
 	@PostMapping("/uploadDocuments")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<String> saveDocuments(@RequestParam("filePath") MultipartFile filePath, String username)
 	{
 		// get the logged in user
@@ -105,6 +108,7 @@ public class DocumentController
 	
 	// fetch the documents
 	@GetMapping("/fetchDocumentDetails")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> fetchDocumentName(
 											@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.ASC)
 											Pageable pageable)
@@ -135,6 +139,7 @@ public class DocumentController
 	
 	// download documents
 	@GetMapping("/download")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<Resource> downloadDocuments(@RequestParam("path") String filePath) throws Exception
 	{
 		// get the logged in user
@@ -166,6 +171,7 @@ public class DocumentController
 	
 	// Share documents
 	@PostMapping("/shareDocument")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> shareDocuments(@RequestParam("documentId") Long documentId,
 												 @RequestParam("shareType") String shareType,
 												 @RequestParam("receiverMail") String receiverMail,
@@ -243,6 +249,7 @@ public class DocumentController
 	
 	// get Document permissionData
 	@GetMapping("/docPermission")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> fetchDocumentPermissionData(
 														@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC)
 														Pageable pageable)
@@ -273,6 +280,7 @@ public class DocumentController
 	
 	// Revoke the Document Permissions
 	@PostMapping("/revokePermission/{dpid}")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<String> revokeDocPermissions(@PathVariable("dpid") Long dpid) throws MessagingException
 	{
 		
@@ -523,6 +531,7 @@ public class DocumentController
 	// fetch the document for the Secure Doc user (Shared Documents)
 	
 	@GetMapping("/fetchSecureDoc")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> fetchShareWithMeDoc(@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.ASC) Pageable pageable)
 	{
 		

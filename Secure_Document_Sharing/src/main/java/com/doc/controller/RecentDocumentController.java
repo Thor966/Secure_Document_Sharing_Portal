@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class RecentDocumentController
 	
 	
 	// get the loggedIn User 
+	@PreAuthorize("hasAuthority('USER')")
 	public UserDTO getLoggedInUser()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,6 +49,7 @@ public class RecentDocumentController
 	
 	// fetch the recent documents
 	@GetMapping("/recentDocuments")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> fetchRecentDocuments(@PageableDefault(page=0, size=5, sort="insertedOn", direction= Direction.DESC) Pageable pageable)
 	{
 		// get the logged in user

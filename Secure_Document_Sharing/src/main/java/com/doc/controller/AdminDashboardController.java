@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class AdminDashboardController
 	
 	
 	// get the logged in admin
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public AdminDTO getLoggedInAdmin()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,6 +52,7 @@ public class AdminDashboardController
 	
 	// fetch the User stats
 	@GetMapping("/adminDashboardUserStats")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> fetchUserStats()
 	{
 		// get the logged In User
@@ -85,6 +88,7 @@ public class AdminDashboardController
 	
 	// fetch the document stats
 	@GetMapping("/adminDashboardDocStats")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> fetchDocStats()
 	{
 		
@@ -122,6 +126,7 @@ public class AdminDashboardController
 	
 	// fetch the Shares Stats
 	@GetMapping("/adminSharesStats")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> fetchSharesStats()
 	{
 		
@@ -158,6 +163,7 @@ public class AdminDashboardController
 	
 	// fetch the storage usage
 	@GetMapping("/storageUsage")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> fetchStorageUsage()
 	{
 		// get the loggedIn Admin 
@@ -175,6 +181,7 @@ public class AdminDashboardController
 	
 	// get the used storage by user
 	@GetMapping("/storageUsagePerUser")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> getStorageUsagePerUser()
 	{
 		// get the logged in user
@@ -189,6 +196,7 @@ public class AdminDashboardController
 	
 	// get the recent action of the admin
 	@GetMapping("/recentAdminAction")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> fetchRecentAdminActions(@PageableDefault(page=0, size=5, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
 	{
 		

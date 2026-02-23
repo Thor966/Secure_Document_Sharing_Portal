@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,7 @@ public class AdminUserManagementController
 	
 	
 	// get the logged in user
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public AdminDTO getLoggedInAdmin()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,6 +52,7 @@ public class AdminUserManagementController
 	
 	// get disabled user count
 	@GetMapping("/disabledUserCount")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Long> fetchDisabledUserCount()
 	{
 		// get loggedIn Admin
@@ -68,6 +71,7 @@ public class AdminUserManagementController
 	
 	// filter the user Data 
 	@GetMapping("/fetchManageUserData")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> filterUserData(@RequestParam(required = false) String keyword,
 											@RequestParam(required = false) String status,
 											@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
@@ -128,6 +132,7 @@ public class AdminUserManagementController
 	
 	// disable the user status
 	@PostMapping("/toggleUserStatus/{uid}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> updateUserStatus(@PathVariable("uid") Long uid, @RequestParam("action") String action)
 	{
 		

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,7 @@ public class AdminDocumentController
 	
 	
 	// get the logged in Admin
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public AdminDTO getLoggedInAdmin()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();	
@@ -50,6 +52,7 @@ public class AdminDocumentController
 	
 	// get the doc, active doc, expire doc and revoke doc count
 	@GetMapping("/documentStats")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> getDocumentStatsCount()
 	{
 		// get the logged in user
@@ -77,6 +80,7 @@ public class AdminDocumentController
 	
 	// get the all documents
 	@GetMapping("/fetchAdminManageDocData")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> fetchAllManageDocumentData(@RequestParam(required = false) String keyword,
 														@RequestParam(required = false) String status,
 													@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
@@ -129,6 +133,7 @@ public class AdminDocumentController
 	
 	// user force revoked
 	@PostMapping("/forceRevoke/{dpid}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> userForceRevokeByAdmin(@PathVariable("dpid") Long dpid, @RequestParam("action") String action)
 	{
 		

@@ -50,15 +50,6 @@
     
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-1">
             <h2 class="fw-bold mb-4">Admin Dashboard</h2>
-
-            <select class="form-select w-auto">
-                <option>Today</option>
-                <option>Last 7 Days</option>
-                <option>Last 15 Days</option>
-                <option>Last 30 Days</option>
-                
-            </select>
-
             <button class="btn btn-outline-secondary" onclick="refreshDashboard()">
                 <i class="fa-solid fa-rotate"></i>
             </button>
@@ -156,27 +147,7 @@
         
     </div>
 
-    <!-- SECURITY ALERTS -->
-    <div class="stat-card mb-4">
-        <h6 class="fw-semibold mb-3">
-            <i class="fa-solid fa-triangle-exclamation me-2 text-danger"></i>
-            Security Alerts & Risk Events
-        </h6>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <i class="fa-solid fa-lock-open me-2 text-danger"></i>
-                Multiple failed OTP attempts detected (5 users)
-            </li>
-            <li class="list-group-item">
-                <i class="fa-solid fa-user-slash me-2 text-warning"></i>
-                3 users temporarily blocked due to suspicious activity
-            </li>
-            <li class="list-group-item">
-                <i class="fa-solid fa-download me-2 text-info"></i>
-                Download limit exceeded on 4 documents
-            </li>
-        </ul>
-    </div>
+ 
 
     <!-- SYSTEM HEALTH -->
     <div class="row g-4 mb-4">

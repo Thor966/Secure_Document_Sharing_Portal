@@ -1,5 +1,8 @@
 package com.doc.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -248,6 +251,40 @@ public class AuditLogsService implements IAuditLogsService
 		
 		});	
 		
+	}
+	
+	
+	
+	// get all global audit logs
+	@Override
+	public List<GlobalAuditLogsDTO> getAllGlobalAuditLogs() {
+		
+		List<AuditLogs> allAuditLogs = auditRepo.findAll(); 
+
+		
+		
+		
+		return allAuditLogs.stream().map(logs->{
+			
+			// create dto object
+			GlobalAuditLogsDTO dto = new GlobalAuditLogsDTO();
+			
+			dto.setTimestamp(logs.getInsertedOn());
+			dto.setUsername(logs.getUser().getEmail());
+			dto.setDocumentName(
+			        logs.getDocument() != null 
+			            ? logs.getDocument().getOriginalName() 
+			            : "—");
+			dto.setAction(logs.getAction().toString());
+			dto.setStatus(logs.getStatus().toString());
+			dto.setSource(logs.getDocPermission() != null 
+							? logs.getDocPermission().getShareType() : "_");
+			
+			
+			return dto;
+			
+		})
+			.collect(Collectors.toList());
 	}
 
 }

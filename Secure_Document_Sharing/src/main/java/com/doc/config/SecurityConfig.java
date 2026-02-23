@@ -64,19 +64,16 @@ public class SecurityConfig
 		.authorizeHttpRequests(requests -> requests
 				.requestMatchers("/","/swagger-ui","/userOperations/register",
 						"/login","/register",
-						"/get-username", "/Secure_Document_Sharing/uploads/**", "/uploads/**", 
-						"/fetchDocumentDetails", "/docaccess/{token}", "/docaccess/verify",
-						"/api/preview/{token}", "/download/{token}","/fetchSecureDoc",
+						 "/Secure_Document_Sharing/uploads/**", "/uploads/**", 
+						 "/docaccess/{token}", "/docaccess/verify",
+						"/api/preview/{token}", "/download/{token}",
 						"/securityPolicy","/terms","/privacyPolicy",
-						"/manageUser","/manageDocument","/manageSecurityLogs","/registerUserCount",
-						"/uploadedDocument","/fetchActiveShares","/onlineUsers","/daywiseExpiredCount",
-						"/accessTypeCount","/storageUsage","/actuator/**","/storageUsagePerUser",
-						"/fetchManageUserData","/disabledUserCount","/toggleUserStatus/{uid}",
-						"/fetchAdminManageDocData","/documentStats","/forceRevoke/{dpid}",
-						"/globalAuditLogs","/recentAdminAction",
+						"/manageUser","/manageDocument","/manageSecurityLogs",
+						"/actuator/**",
 						
 						
-						//"/adminDashboard"
+						
+						
 						
 						
 						"/css/**", "/js/**", 

@@ -3,6 +3,7 @@ package com.doc.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -57,6 +58,7 @@ public class PageLoader
 	
 	// launch dashboard page
 	@GetMapping("/dashboard")
+	@PreAuthorize("hasAuthority('USER')")
 	public String dashboard()
 	{
 		
@@ -66,6 +68,7 @@ public class PageLoader
 	
 	// launch my documents page
 	@GetMapping("/mydocuments")
+	@PreAuthorize("hasAuthority('USER')")
 	public String myDocuments()
 	{
 		return "mydocument";
@@ -75,6 +78,7 @@ public class PageLoader
 	
 	// launch manage documents page
 	@GetMapping("/managedocuments")
+	@PreAuthorize("hasAuthority('USER')")
 	public String manageDocuments()
 	{
 		return"managedocuments";
@@ -84,6 +88,7 @@ public class PageLoader
 	
 	// launch access document page
 	@GetMapping("/accessdocument")
+	@PreAuthorize("hasAuthority('USER')")
 	public String accessDocument()
 	{
 		return "access_document";
@@ -93,6 +98,7 @@ public class PageLoader
 	
 	// launch document-preview page
 	@GetMapping("/document-preview")
+	@PreAuthorize("hasAuthority('USER')")
 	public String docPreview()
 	{
 		return "document_preview";
@@ -102,6 +108,7 @@ public class PageLoader
 	
 	// launch share-with-me page
 	@GetMapping("/share-with-me")
+	@PreAuthorize("hasAuthority('USER')")
 	public String shareWithMe()
 	{
 		return "share_with_me";
@@ -111,6 +118,7 @@ public class PageLoader
 	
 	// launch security activity page
 	@GetMapping("/securityActivity")
+	@PreAuthorize("hasAuthority('USER')")
 	public String securityActivity()
 	{
 		return "security_activity";
@@ -144,6 +152,7 @@ public class PageLoader
 	
 	// launching Admin Dashboard
 	@GetMapping("/adminDashboard")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String manageAdminDashboard()
 	{
 		return "admin/admin_dashboard";
@@ -152,6 +161,7 @@ public class PageLoader
 	
 	// launch Admin users page
 	@GetMapping("/manageUser")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String manageAdminUsers()
 	{
 		return "admin/admin_user";
@@ -160,6 +170,7 @@ public class PageLoader
 	
 	// launch Admin documents page
 	@GetMapping("/manageDocument")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String manageAdminDocuments()
 	{
 		return "admin/admin_document";
@@ -168,6 +179,7 @@ public class PageLoader
 	
 	// launch Admin security logs
 	@GetMapping("/manageSecurityLogs")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String manageAdminSecurityLogs()
 	{
 		return "admin/admin_security_logs";

@@ -2,6 +2,7 @@ package com.doc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ public class AccessSummaryController
 	
 	
 	// get the loggedIn user
+	@PreAuthorize("hasAuthority('USER')")
 	public UserDTO getLoggedInUser()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -39,6 +41,7 @@ public class AccessSummaryController
 	
 	// get the OTP protected Documents
 	@GetMapping("/docOtpCount")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<Long> fetchOTPProtectedDocuments()
 	{
 		// get the logged in user
@@ -55,6 +58,7 @@ public class AccessSummaryController
 	
 	// get the Password Protected Documents
 	@GetMapping("/docPassCount")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<Long> fetchPassProtectedDocuments()
 	{
 		// get the loggedIn User
@@ -70,6 +74,7 @@ public class AccessSummaryController
 	
 	// get the Expired Document Count
 	@GetMapping("/docExpiredCount")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<Long> fetchExpiredDocumentCount()
 	{
 		// get the loggedIn user

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class AuditLogsController
 	
 	
 	// get the loggedIn user
+	@PreAuthorize("hasAuthority('USER')")
 	public UserDTO getLoggedInUser()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,6 +55,7 @@ public class AuditLogsController
 	
 	// get the security activity logs
 	@GetMapping("/securityLogs")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> fetchSecurityAuditLogs(@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
 	{
 		
@@ -71,6 +74,7 @@ public class AuditLogsController
 	
 	// get the recent audit logs
 	@GetMapping("/recentAuditLogs")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> fetchRecentAuditLogs(@PageableDefault(page=0, size=5, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
 	{
 		// get the loggedIn user
@@ -84,55 +88,9 @@ public class AuditLogsController
 
 	
 	
-	// get the global audit logs for admin
-	@GetMapping("/globalAuditLogs")
-	public ResponseEntity<?> getAllGlobalAuditLogs(@RequestParam(required = false) String keyword,
-													@RequestParam(required = false) String status,
-													@PageableDefault(page=0, size=20, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
-	{
-		
-		// get the logged in Admin
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-		
-		AdminDTO admin = dashboardService.getAdminByUsername(username);
-		
-		Page<GlobalAuditLogsDTO> auditPage;
-		
-		
-		if(keyword != null && !keyword.trim().isEmpty() &&
-				status != null && !status.trim().isEmpty())
-		{
-			auditPage = auditService.filterByKeywordAndStatus(keyword, status, pageable);
-		}
-		else if(keyword != null && !keyword.trim().isEmpty())
-		{
-			auditPage = auditService.filterByKeyword(keyword, pageable);
-		}
-		else if(status != null && !status.trim().isEmpty())
-		{
-			auditPage = auditService.filterByStatus(status, pageable);
-		}
-		else
-		{
-			auditPage = auditService.getGlobalAuditLogs(pageable);
-		}
-		
-		
-		// get the service class method
-		
-		Map<String, Object> response = new HashMap<>();
-		
-		response.put("content", auditPage.getContent());
-		response.put("currentPage", auditPage.getNumber());
-	    response.put("pageSize", auditPage.getSize());
-	    response.put("totalElements", auditPage.getTotalElements());
-	    response.put("totalPages", auditPage.getTotalPages());
-	    response.put("first", auditPage.isFirst());
-	    response.put("last", auditPage.isLast());
-		
-		
-	    return ResponseEntity.ok(response);
-	    
-	}
+	
+	
+	
+	
+	
 }

@@ -1,5 +1,7 @@
 package com.doc.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -33,6 +35,9 @@ public interface IAuditLogsService
 	
 	// filter by status only
 	Page<GlobalAuditLogsDTO> filterByStatus(String status, Pageable pageable);
+	
+	// get all global audit logs
+	List<GlobalAuditLogsDTO> getAllGlobalAuditLogs();
 	
 	
 

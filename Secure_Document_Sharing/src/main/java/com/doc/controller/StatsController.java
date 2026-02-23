@@ -2,6 +2,7 @@ package com.doc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ public class StatsController
 	
 	
 	// get the logged in user
+	@PreAuthorize("hasAuthority('USER')")
 	public UserDTO getLoggedInUser()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -39,6 +41,7 @@ public class StatsController
 	
 	// get the total Document count 
 	@GetMapping("/documentCount")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<Long> totalDocumentCount()
 	{
 		// get the logged in user
@@ -53,6 +56,7 @@ public class StatsController
 	
 	// get the shared document count
 	@GetMapping("/sharedDocCount")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<Long> sharedDocumentCount()
 	{
 		// get the loggedin user
@@ -68,6 +72,7 @@ public class StatsController
 	
 	// get the active link count
 	@GetMapping("/activeLinkCount")
+	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<Long> getActiveLinkCount()
 	{
 		// get the loggedin user
