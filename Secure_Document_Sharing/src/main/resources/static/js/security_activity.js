@@ -1,37 +1,6 @@
 
 // get the security audit logs
-const CONTEXT_PATH = '';
-
-/*fetch(CONTEXT_PATH + 'securityLogs')
-    .then(res => res.json())
-    .then(data => {
-
-        const container = document.getElementById("activityContainer");
-        container.innerHTML = "";
-
-        data.content.forEach(log => {
-
-            const { icon, color, badge } = getActionUI(log.action);
-
-            const div = document.createElement("div");
-            div.className = "activity-item d-flex justify-content-between align-items-start";
-
-            div.innerHTML = `
-                <div>
-                    <i class="fa-solid ${icon} me-2 ${color}"></i>
-                    ${getMessage(log)}
-                    <div class="activity-time mt-1">
-                        ${formatTime(log.time)}
-                    </div>
-                </div>
-                <span class="badge badge-security">${badge}</span>
-            `;
-
-            container.appendChild(div);
-        });
-    });*/
-	
-	
+const CONTEXT_PATH = '';	
 	// get the data from endpoint
 	let currentPage = 0;
 	const pageSize = 10;

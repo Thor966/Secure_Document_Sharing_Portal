@@ -10,6 +10,7 @@ public class AuditLogsDTO {
     private String documentName;
     private String action;
     private String performedBy;
+    private String performTo;
     private LocalDateTime time;
 }
 

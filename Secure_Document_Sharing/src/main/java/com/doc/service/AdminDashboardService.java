@@ -8,13 +8,19 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 
 import com.doc.dto.AdminDTO;
+import com.doc.dto.AuditLogsDTO;
 import com.doc.dto.StorageUsageDTO;
 import com.doc.entity.Admin;
+import com.doc.entity.AuditLogs;
+import com.doc.entity.ManageStatus;
 import com.doc.repository.AdminRepository;
+import com.doc.repository.AuditLogsRepository;
 import com.doc.repository.DocumentPermissionsRepository;
 import com.doc.repository.DocumentsRepository;
 import com.doc.repository.UserRepository;
@@ -37,6 +43,9 @@ public class AdminDashboardService implements IAdminDashboardService
 	
 	@Autowired
 	private SessionRegistry sessionRegistry;
+	
+	@Autowired
+	private AuditLogsRepository auditRepo;
 	
 	
 	
@@ -222,4 +231,31 @@ public class AdminDashboardService implements IAdminDashboardService
 		return docRepo.getStorageUsagePerUser();
 	}
 
+	
+	
+	// get the admin recent actions
+	@Override
+	public Page<AuditLogsDTO> getAdminRecentAction(Pageable pageable) {
+		
+		Page<AuditLogs> logData = auditRepo.findByStatus(ManageStatus.ADMIN, pageable);
+		
+		return logData.map(action->{
+			
+			// create the dto object
+			
+			AuditLogsDTO dto  = new AuditLogsDTO();
+			
+		
+			dto.setDocumentName(
+			        action.getDocument() != null 
+			            ? action.getDocument().getOriginalName() 
+			            : "—");
+			dto.setAction(action.getAction().toString());
+			dto.setTime(action.getInsertedOn());
+			dto.setPerformTo(action.getUser().getEmail());
+			
+			return dto;
+			
+		});
+	}
 }

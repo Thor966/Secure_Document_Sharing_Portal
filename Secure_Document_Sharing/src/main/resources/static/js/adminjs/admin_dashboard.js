@@ -1,4 +1,4 @@
-   /*==========Dashboard JavaScript==========*/
+   /*==========Dashboard JavaScript========== */
 
 
 
@@ -230,3 +230,160 @@ function refreshDashboard() {
 			        });
 			    });
 
+
+				
+				
+				
+				
+				// get the Admin recent action 
+					
+					let currentPage = 0;
+					const pageSize = 5;
+
+					function loadLogs(page = 0) {
+
+					    fetch(`${CONTEXT_PATH}recentAdminAction?page=${page}&size=${pageSize}`)
+					        .then(res => res.json())
+					        .then(data => {
+
+								console.log("recent admin activity:", data);
+								currentPage = data.currentPage;
+
+					            renderLogs(data.content);
+					            renderPagination(data);
+					        });
+					}
+
+					
+					// render audit logs to html
+					function renderLogs(logs) {
+
+					    const container = document.getElementById("activityContainer");
+					    container.innerHTML = "";
+
+					    const ul = document.createElement("ul");
+					    ul.className = "list-group list-group-flush";
+
+					    logs.forEach(log => {
+
+					        const li = document.createElement("li");
+					        li.className = "list-group-item";
+
+					        li.innerHTML = `
+					            ${getMessage(log)}
+					            <div class="activity-time mt-1">
+					                ${formatTime(log.time)}
+					            </div>
+					        `;
+
+					        ul.appendChild(li);
+					    });
+
+					    container.appendChild(ul);
+					}
+					
+					
+					
+					
+					
+					
+					// pagination controls and data
+					function renderPagination(pageData) {
+
+					    const container = document.getElementById("paginationContainer");
+					    container.innerHTML = "";
+
+					    const totalPages = pageData.totalPages;
+					    const current = pageData.currentPage;
+
+					    if (totalPages <= 1) return;
+
+					    // Previous
+					    if (!pageData.first) {
+					        container.innerHTML += `
+					            <button class="btn btn-outline-primary mx-1"
+					                onclick="loadLogs(${current - 1})">
+					                Previous
+					            </button>`;
+					    }
+
+					    
+
+					    for (let i = 0; i < pageData.totalPages; i++) {
+
+					        container.innerHTML += `
+					            <button class="btn mx-1
+					                ${i === current ? 'btn-primary' : 'btn-outline-primary'}"
+					                onclick="loadLogs(${i})">
+					                ${i + 1}
+					            </button>`;
+					    }
+
+					    // Next
+					    if (!pageData.last) {
+					        container.innerHTML += `
+					            <button class="btn btn-outline-primary mx-1"
+					                onclick="loadLogs(${current + 1})">
+					                Next
+					            </button>`;
+					    }
+					}
+
+					
+					
+					document.addEventListener("DOMContentLoaded", function () {
+					    loadLogs(0);
+					});
+
+
+		
+					
+					// message format
+					function getMessage(log) {
+
+					    const doc = `<strong>${log.documentName}</strong>`;
+						const performTo = `<strong>${log.performTo}</strong>`
+
+					    switch (log.action) {
+					        case "FORCED_REVOKED":
+					            return `Admin revoked access to  ${doc}.`;
+
+					        case "USER_DISABLED":
+					            return `User ${performTo} disabled.`;
+								
+							case "USER_ENABLED":
+								return `User ${performTo} enabled.`;
+
+					        default:
+					            return `${log.action} on ${doc}`;
+					    }
+					}
+
+					
+					
+					// time format
+					
+					function formatTime(dateStr) {
+
+					    const date = new Date(dateStr);
+					    const now = new Date();
+
+					    const diffSeconds = Math.floor((now - date) / 1000);
+					    const diffMinutes = Math.floor(diffSeconds / 60);
+					    const diffHours = Math.floor(diffMinutes / 60);
+					    const diffDays = Math.floor(diffHours / 24);
+
+					    if (diffSeconds < 60) return "Just now";
+					    if (diffMinutes < 60) return `${diffMinutes} min ago`;
+					    if (diffHours < 24) return `${diffHours} hrs ago`;
+					    if (diffDays === 1) return "Yesterday";
+					    if (diffDays < 7) return `${diffDays} days ago`;
+
+					    return date.toLocaleString("en-IN", {
+					        day: "2-digit",
+					        month: "short",
+					        year: "numeric",
+					        hour: "2-digit",
+					        minute: "2-digit"
+					    });
+					}

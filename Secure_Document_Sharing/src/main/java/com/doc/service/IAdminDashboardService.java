@@ -3,8 +3,13 @@ package com.doc.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.doc.dto.AdminDTO;
+import com.doc.dto.AuditLogsDTO;
 import com.doc.dto.StorageUsageDTO;
+import com.doc.entity.ManageStatus;
 
 public interface IAdminDashboardService 
 {
@@ -59,6 +64,9 @@ public interface IAdminDashboardService
 	
 	// get the storage per user
 	public  List<StorageUsageDTO> getStoragePerUser();
+	
+	// get the admin recent action
+	public Page<AuditLogsDTO> getAdminRecentAction( Pageable pageable);
 	
 
 }

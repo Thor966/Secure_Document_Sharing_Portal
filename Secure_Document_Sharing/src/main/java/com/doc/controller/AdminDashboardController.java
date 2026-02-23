@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,8 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.doc.dto.AdminDTO;
+import com.doc.dto.AuditLogsDTO;
 import com.doc.dto.StorageUsageDTO;
-import com.doc.repository.AdminRepository;
 import com.doc.service.IAdminDashboardService;
 
 @RestController
@@ -169,7 +173,7 @@ public class AdminDashboardController
 	}
 	
 	
-	
+	// get the used storage by user
 	@GetMapping("/storageUsagePerUser")
 	public ResponseEntity<?> getStorageUsagePerUser()
 	{
@@ -179,6 +183,33 @@ public class AdminDashboardController
 		List<StorageUsageDTO> storageUsagePerUser = dashboardService.getStoragePerUser();
 		
 	    return ResponseEntity.ok( storageUsagePerUser);
+	}
+	
+	
+	
+	// get the recent action of the admin
+	@GetMapping("/recentAdminAction")
+	public ResponseEntity<?> fetchRecentAdminActions(@PageableDefault(page=0, size=5, sort="insertedOn", direction=Direction.DESC) Pageable pageable)
+	{
+		
+		// get the logged in user
+		AdminDTO admin = getLoggedInAdmin();
+		
+		// get the service class method 
+		Page<AuditLogsDTO> recentAction = dashboardService.getAdminRecentAction(pageable);
+		
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		response.put("content", recentAction.getContent());
+	    response.put("currentPage", recentAction.getNumber());
+	    response.put("pageSize", recentAction.getSize());
+	    response.put("totalElements", recentAction.getTotalElements());
+	    response.put("totalPages", recentAction.getTotalPages());
+	    response.put("first", recentAction.isFirst());
+	    response.put("last", recentAction.isLast());
+		
+	    return ResponseEntity.ok(response);
 	}
 
 

@@ -40,6 +40,9 @@ public interface AuditLogsRepository extends JpaRepository<AuditLogs, Long>
  	@Query("SELECT al FROM AuditLogs al WHERE (:status IS NULL OR LOWER(al.status) LIKE LOWER(CONCAT('%', :status, '%')))")
 	Page<AuditLogs> searchByStatus(@Param("status") String status, Pageable pageable);
     
+ 	
+ 	// get the admin recent Action
+ 	Page<AuditLogs> findByStatus(ManageStatus status, Pageable pageable);
     
     
     

@@ -73,7 +73,7 @@ public class SecurityConfig
 						"/accessTypeCount","/storageUsage","/actuator/**","/storageUsagePerUser",
 						"/fetchManageUserData","/disabledUserCount","/toggleUserStatus/{uid}",
 						"/fetchAdminManageDocData","/documentStats","/forceRevoke/{dpid}",
-						"/globalAuditLogs",
+						"/globalAuditLogs","/recentAdminAction",
 						
 						
 						//"/adminDashboard"
