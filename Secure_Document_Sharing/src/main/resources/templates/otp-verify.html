@@ -15,7 +15,7 @@
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-    <link th:href="@{/css/otf_verify.css}" rel="stylesheet">
+    <link th:href="@{/css/otp_verify.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -48,7 +48,7 @@
                     </div>
 
                     <!-- OTP FORM -->
-                    <form th:action="@{/verify-otp}" method="post">
+                    <form id="otpForm">
 
                         <div class="d-flex justify-content-between mb-4">
                             <input type="text" maxlength="1" class="form-control otp-input" required>
@@ -63,10 +63,12 @@
                         <div th:if="${error}" class="text-danger small mb-3 text-center">
                             Invalid or expired OTP
                         </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            Verify & Continue
-                        </button>
+                        
+                        
+                         <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+   						 <span id="btnText">Verify & Continue</span>
+    					 <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+						</button>
 
                     </form>
 

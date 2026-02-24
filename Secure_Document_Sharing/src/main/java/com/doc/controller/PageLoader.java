@@ -4,14 +4,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.doc.entity.User;
 import com.doc.service.IuserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class PageLoader
@@ -45,6 +44,35 @@ public class PageLoader
 		return"login";
 	}
 
+	
+	// launch the forgot password page
+	@GetMapping("/forgot-passwordPage")
+	public String forgotPage()
+	{
+		return "forgot";
+	}
+	
+	
+	// launch the otp verification page
+	@GetMapping("/otp-verify")
+	public String otpVerification()
+	{
+		return "otp-verify";
+	}
+	
+	
+	// launch the reset-password page
+	@GetMapping("/reset-passwordPage")
+	public String resetUserPassword(HttpSession session)
+	{
+		Boolean verified = (Boolean) session.getAttribute("OTP_VERIFIED");
+
+        if (verified == null || !verified) {
+            return "redirect:/forgot-passwordPage";
+        }
+		
+		return "reset_password";
+	}
 	
 	
 	// launch register page

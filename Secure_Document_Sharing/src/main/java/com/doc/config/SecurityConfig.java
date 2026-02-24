@@ -69,7 +69,8 @@ public class SecurityConfig
 						"/api/preview/{token}", "/download/{token}",
 						"/securityPolicy","/terms","/privacyPolicy",
 						"/manageUser","/manageDocument","/manageSecurityLogs",
-						"/actuator/**",
+						"/actuator/**","/forgot-passwordPage","/forgot-password", "/otp-verify",
+						"/verify-otp","/reset-passwordPage","/reset-password",
 						
 						
 						

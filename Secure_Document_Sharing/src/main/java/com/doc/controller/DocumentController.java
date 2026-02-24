@@ -110,7 +110,7 @@ public class DocumentController
 	@GetMapping("/fetchDocumentDetails")
 	@PreAuthorize("hasAuthority('USER')")
 	public ResponseEntity<?> fetchDocumentName(
-											@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.ASC)
+											@PageableDefault(page=0, size=10, sort="insertedOn", direction=Direction.DESC)
 											Pageable pageable)
 	{
 		// get the username 
@@ -342,6 +342,8 @@ public class DocumentController
 	        response.put("next", "/Secure_Document_Sharing/document-preview?token=" + token);
 	    }
 	    
+	  //set the audit logs for view
+	    logService.logAction(dp.getGrantedBy().getUid(), dp.getDocumentId().getDocid(), dp.getDpid(), ManageAction.VIEW, status);
 	    
 	    return ResponseEntity.ok(response);
 		
